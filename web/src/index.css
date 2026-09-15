@@ -32,9 +32,15 @@
   --secondary: oklch(95.5% 0.006 106.5);
   --secondary-foreground: var(--foreground);
 
+  /* shadcn treats --accent as the subtle hover/focus surface, so it stays a warm
+     neutral. The design system's Coral lives in --highlight and is applied
+     deliberately, never as chrome. */
+  --accent: oklch(95.5% 0.006 106.5);
+  --accent-foreground: var(--foreground);
+
   /* Coral: highlights, streaks, celebration only. Never destructive. */
-  --accent: oklch(68.82% 0.1724 33.33); /* #F26B4F */
-  --accent-foreground: oklch(22.64% 0.0135 291.83); /* ink, 5.69:1 */
+  --highlight: oklch(68.82% 0.1724 33.33); /* #F26B4F */
+  --highlight-foreground: oklch(22.64% 0.0135 291.83); /* ink, 5.69:1 */
 
   --muted: oklch(95.5% 0.006 106.5); /* warm stone */
   --muted-foreground: oklch(48% 0.012 106.5);
@@ -81,8 +87,11 @@
   --secondary: oklch(27% 0.006 271);
   --secondary-foreground: var(--foreground);
 
-  --accent: oklch(68.82% 0.1724 33.33);
-  --accent-foreground: oklch(22.64% 0.0135 291.83);
+  --accent: oklch(27% 0.006 271);
+  --accent-foreground: var(--foreground);
+
+  --highlight: oklch(68.82% 0.1724 33.33);
+  --highlight-foreground: oklch(22.64% 0.0135 291.83);
 
   --muted: oklch(27% 0.006 271);
   --muted-foreground: oklch(72% 0.01 271);
@@ -110,6 +119,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);

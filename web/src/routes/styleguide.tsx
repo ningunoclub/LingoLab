@@ -4,7 +4,6 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ANSWER_SLOTS, AnswerTile } from '@/components/AnswerTile';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,7 +28,8 @@ const SEMANTIC_TOKENS = [
   { name: 'card', className: 'bg-card text-card-foreground border' },
   { name: 'primary', className: 'bg-primary text-primary-foreground' },
   { name: 'secondary', className: 'bg-secondary text-secondary-foreground' },
-  { name: 'accent', className: 'bg-accent text-accent-foreground' },
+  { name: 'accent (hover surface)', className: 'bg-accent text-accent-foreground border' },
+  { name: 'highlight (coral)', className: 'bg-highlight text-highlight-foreground' },
   { name: 'muted', className: 'bg-muted text-muted-foreground' },
   { name: 'destructive', className: 'bg-destructive text-destructive-foreground' },
 ] as const;
@@ -48,12 +48,9 @@ function Styleguide() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10 lg:px-8">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-display text-3xl font-bold">{t('styleguide.title')}</h1>
-          <p className="prose-measure text-muted-foreground">{t('styleguide.intro')}</p>
-        </div>
-        <ThemeToggle />
+      <header className="flex flex-col gap-1">
+        <h1 className="font-display text-3xl font-bold">{t('styleguide.title')}</h1>
+        <p className="prose-measure text-muted-foreground">{t('styleguide.intro')}</p>
       </header>
 
       <Section title={t('styleguide.colours')}>

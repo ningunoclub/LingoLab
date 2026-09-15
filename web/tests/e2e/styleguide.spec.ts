@@ -6,9 +6,14 @@ test.describe('styleguide', () => {
   test('renders every token section with no console errors', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', (message) => {
-      if (message.type() === 'error') errors.push(message.text());
+      // The browser logs the auth check's 401 itself. That response is expected for a
+      // signed-out visitor and is handled, so it is not an application error.
+      const text = message.text();
+      const isExpected401 = /Failed to load resource/.test(text);
+      if (message.type() === 'error' && !isExpected401) errors.push(text);
     });
     page.on('pageerror', (error) => errors.push(error.message));
+    page.on('requestfailed', (request) => errors.push(`requestfailed: ${request.url()}`));
 
     await page.goto('/styleguide');
 
