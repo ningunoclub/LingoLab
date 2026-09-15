@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2026 Bruno Zingg
 // SPDX-License-Identifier: MPL-2.0
-import path from 'node:path';
-import { tanstackRouter } from '@tanstack/router-plugin/vite';
+
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
@@ -14,7 +15,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   resolve: {
-    alias: { '@': path.resolve(__dirname, './src') },
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   server: {
     port: 5173,

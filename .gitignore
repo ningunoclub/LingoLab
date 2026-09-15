@@ -28,3 +28,10 @@ web/playwright-report/
 # raw Claude Code transcripts (may contain secrets): local only, back them up separately
 docs/thesis/_sessions/
 # <<< lingolab-kit <<<
+
+# Frontend build artefacts
+web/node_modules/
+web/dist/
+web/coverage/
+web/playwright-report/
+web/test-results/
