@@ -38,7 +38,8 @@ Define all colours as shadcn CSS variables in OKLCH (convert from the hex values
 **Light (default)**
 - `--background` #FAFAF7 (warm off-white), `--foreground` #1C1B22 (ink)
 - `--primary` #0F766E "Lingo Teal" with **white** text (5.5:1)
-- `--accent` #F26B4F "Coral" with **ink** text. Only for highlights, streaks, celebration; never for destructive actions.
+- `--highlight` #F26B4F "Coral" with **ink** text. Only for highlights, streaks, celebration; never for destructive actions.
+  (Coral is `--highlight`, not `--accent`: shadcn reserves `--accent` for the subtle hover/focus surface, which stays a warm neutral.)
 - `--muted` / `--border`: warm stone neutrals
 - `--destructive` #B42318
 
