@@ -1,0 +1,82 @@
+# SPDX-FileCopyrightText: 2026 Bruno Zingg
+# SPDX-License-Identifier: MPL-2.0
+#
+# Local development services. The React app runs outside Docker (pnpm -C web dev).
+#   docker compose -f compose.dev.yml up -d                     -> backend on http://localhost:8000
+#   docker compose -f compose.dev.yml --profile legacy up -d    -> + legacy Svelte app on http://localhost:8080
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: classquiz
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: valkey/valkey:alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.7   # same version as upstream's dev compose
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - search:/meili_data
+    ports:
+      - "7700:7700"
+
+  api:
+    build: .
+    env_file: .env.dev
+    ports:
+      - "8000:80"
+    volumes:
+      - uploads:/app/data
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      meilisearch: { condition: service_started }
+
+  worker:
+    build: .
+    env_file: .env.dev
+    command: arq classquiz.worker.WorkerSettings
+    volumes:
+      - uploads:/app/data
+    depends_on:
+      - api
+
+  # --- Legacy app, only for side-by-side comparison during the rewrite ---
+  legacy-frontend:
+    profiles: [legacy]
+    build: ./frontend
+    environment:
+      API_URL: http://api:80
+      REDIS_URL: redis://redis:6379/0?decode_responses=True
+    depends_on: [api]
+
+  legacy-proxy:
+    profiles: [legacy]
+    image: caddy:alpine
+    volumes:
+      - ./compose.legacy.Caddyfile:/etc/caddy/Caddyfile:ro
+    ports:
+      - "8080:8080"
+    depends_on: [legacy-frontend]
+
+volumes:
+  db:
+  search:
+  uploads:

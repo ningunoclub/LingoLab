@@ -13,3 +13,18 @@ survey.json
 .coverage
 export_deta.py
 target/
+
+# >>> lingolab-kit >>>
+.env.dev
+# upstream ignores .env*, but the example should be committed
+!.env.dev.example
+.env.local
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+.claude/tmp/
+.claude/settings.local.json
+# raw Claude Code transcripts (may contain secrets): local only, back them up separately
+docs/thesis/_sessions/
+# <<< lingolab-kit <<<

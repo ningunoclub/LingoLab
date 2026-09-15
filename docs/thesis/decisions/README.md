@@ -1,0 +1,14 @@
+# Architecture Decision Records
+
+| # | Decision | Status | Date |
+|---|---|---|---|
+| [0001](0001-self-hosted-docker.md) | Self-hosted Docker stack instead of Vercel/Supabase | Accepted | 2026-09-15 |
+| [0002](0002-fork-classquiz.md) | Build on a fork of ClassQuiz | Accepted | 2026-09-15 |
+| [0003](0003-react-rewrite-parity-first.md) | Rewrite the frontend in React/TypeScript, behaviour first | Accepted | 2026-09-15 |
+| [0004](0004-license-mpl-2.md) | Licence the project under MPL-2.0 | Accepted | 2026-09-15 |
+| [0005](0005-repository-strategy.md) | Standalone repository with full upstream history | Accepted | 2026-09-15 |
+| [0006](0006-frontend-stack.md) | Frontend stack and library choices | Accepted | 2026-09-15 |
+| [0007](0007-ai-assisted-workflow.md) | AI-assisted development workflow and harness | Accepted | 2026-09-15 |
+| [0008](0008-scope-classes-in-progress-out.md) | Scope: class management in, student progress tracking out | Accepted | 2026-09-15 |
+| [0009](0009-design-system.md) | Design system direction | Proposed | 2026-09-15 |
+| [0010](0010-documentation-process.md) | Documentation process for the thesis | Accepted | 2026-09-15 |

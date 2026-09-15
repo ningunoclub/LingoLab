@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Bruno Zingg
+# SPDX-License-Identifier: MPL-2.0
+:8080 {
+	reverse_proxy /api/* api:80
+	reverse_proxy /openapi.json api:80
+	reverse_proxy /socket.io/* api:80
+	reverse_proxy * legacy-frontend:3000
+}
