@@ -11,7 +11,7 @@ AI-driven. Documentation must be reliable, attributable and low-effort, and must
 ## Decision
 Three layers:
 1. **Automatic raw records:** git history and PRs, plus a `SessionEnd` hook that archives Claude Code transcripts to
-   `docs/thesis/_sessions/` (git-ignored). Claude Code's default 30-day transcript cleanup is extended in user settings.
+   `docs/thesis/_sessions/` (git-ignored). Claude Code's default 30-day transcript cleanup is extended to 3650 days in the project settings (`.claude/settings.json`).
 2. **Curated records on request:** at the end of every task Claude *asks* whether to document. Writing happens only
    through the user-only `/document` skill (`disable-model-invocation: true`), which enforces this.
 3. **Thesis writing:** Bruno writes, using layers 1 and 2 as sources.
