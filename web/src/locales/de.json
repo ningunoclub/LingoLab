@@ -137,6 +137,13 @@
     "unsupported_method": "Diese Anmeldemethode ist in dieser Version noch nicht verfügbar.",
     "wrong_credentials_help": "Prüfe E-Mail-Adresse und Passwort und versuche es erneut."
   },
+  "oauth_error_page": {
+    "title": "Anmeldung nicht möglich",
+    "email_body": "GitHub hat uns keine E-Mail-Adresse übermittelt. Prüfe, ob dein GitHub-Konto eine bestätigte E-Mail-Adresse hat, und versuche es erneut.",
+    "generic_body": "Bei der Anmeldung mit GitHub ist etwas schiefgelaufen. Dein Konto wurde nicht verändert, du kannst es also gefahrlos erneut versuchen.",
+    "back_to_login": "Zurück zur Anmeldung",
+    "persists": "Wenn das weiterhin passiert, wende dich an die Person, die diesen LingoLab-Server betreibt."
+  },
   "words": {
     "question": "Frage",
     "answer": "Antwort",

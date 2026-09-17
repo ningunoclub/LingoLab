@@ -39,7 +39,7 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 - [x] `/account/register` (385): email/username/password + consent. **No captcha or proof-of-work** — legacy has none on this route and the backend accepts no such field.
 - [x] `/account/reset-password` (145): **requests** the reset mail. Despite the name, this is the entry point linked from login/register.
 - [x] `/account/password-reset` (172): **consumes** the token from that mail. The names are inverted upstream; kept, since they appear in already-sent emails.
-- [ ] `/account/oauth-error` (54)
+- [x] `/account/oauth-error` (54): landing page for a failed GitHub sign-in. Reached only by a backend redirect.
 - [ ] `/account/settings` (331)
 - [ ] `/account/settings/security` (295): passkeys via `@simplewebauthn/browser`
 - [ ] `/account/settings/avatar` (178)
@@ -123,3 +123,7 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | both reset routes | Each page hardcodes an `<h2>ClassQuiz</h2>` wordmark. | Replaced with `APP_NAME` from `config.ts` (no-ClassQuiz-branding rule). |
 | `account/reset-password` | Sets `navbarVisible.visible = true` while `account/password-reset` does not, so the two halves of one flow render with different chrome. | Both render in the standard app shell; `web/` has no `navbarVisible` equivalent. |
 | `account/password-reset` | The password form has no username field, so password managers cannot file the new password against an account (Chrome warns in the console). | A hidden, empty `autocomplete="username"` input is added. The page knows only the token, and no endpoint maps a token to a user — deliberately, since that would leak the address to anyone holding a token. |
+| `account/oauth-error` | The page is hardcoded English while the rest of the app is translated, and has no i18n keys at all upstream. | New `oauth_error_page.*` keys in en + de. |
+| `account/oauth-error` | Both messages are phrased as questions at the user ("Are you sure you've got an email? Is the Email verified?") and the generic branch doesn't say what to do next. | Reworded: each branch names the one thing the user can act on, and says the account is unchanged so retrying is safe. |
+| `account/oauth-error` | Tells users to open an issue on the **upstream author's** GitHub tracker. | **Dropped.** Third-party, and wrong for a self-hosted instance whose users have a local admin. Replaced with "contact the person who runs this LingoLab server". A unit test pins that the page links nowhere external. |
+| `account/oauth-error` | `?error` is compared only against `'email'`; any other value silently falls through to the generic text. | Kept, and made explicit: the route maps anything that is not `email` to `generic`, so an unexpected `?error` can never blank the page. |

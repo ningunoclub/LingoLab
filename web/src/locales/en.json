@@ -132,6 +132,13 @@
     "unsupported_method": "This sign-in method isn't available yet in this version.",
     "wrong_credentials_help": "Check your email address and password, then try again."
   },
+  "oauth_error_page": {
+    "title": "We couldn't sign you in",
+    "email_body": "GitHub didn't share an email address with us. Check that your GitHub account has a verified email address, then try again.",
+    "generic_body": "Something went wrong while signing you in with GitHub. Your account is unchanged, so it's safe to try again.",
+    "back_to_login": "Back to sign in",
+    "persists": "If this keeps happening, contact the person who runs this LingoLab server."
+  },
   "words": {
     "question": "Question",
     "answer": "Answer",
