@@ -24,6 +24,9 @@ import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DocsAttributionRouteImport } from './routes/docs/attribution'
 import { Route as DocsPrivacyPolicyRouteImport } from './routes/docs/privacy-policy'
+import { Route as UserUserIdRouteImport } from './routes/user/$userId'
+import { Route as AccountSettingsAvatarRouteImport } from './routes/account/settings/avatar'
+import { Route as AccountSettingsSecurityRouteImport } from './routes/account/settings/security'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -100,6 +103,21 @@ const DocsPrivacyPolicyRoute = DocsPrivacyPolicyRouteImport.update({
   path: '/docs/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UserUserIdRoute = UserUserIdRouteImport.update({
+  id: '/user/$userId',
+  path: '/user/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountSettingsAvatarRoute = AccountSettingsAvatarRouteImport.update({
+  id: '/avatar',
+  path: '/avatar',
+  getParentRoute: () => AccountSettingsRoute,
+} as any)
+const AccountSettingsSecurityRoute = AccountSettingsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AccountSettingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -113,10 +131,13 @@ export interface FileRoutesByFullPath {
   '/account/password-reset': typeof AccountPasswordResetRoute
   '/account/register': typeof AccountRegisterRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
-  '/account/settings': typeof AccountSettingsRoute
+  '/account/settings': typeof AccountSettingsRouteWithChildren
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
+  '/user/$userId': typeof UserUserIdRoute
   '/docs/': typeof DocsIndexRoute
+  '/account/settings/avatar': typeof AccountSettingsAvatarRoute
+  '/account/settings/security': typeof AccountSettingsSecurityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -130,10 +151,13 @@ export interface FileRoutesByTo {
   '/account/password-reset': typeof AccountPasswordResetRoute
   '/account/register': typeof AccountRegisterRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
-  '/account/settings': typeof AccountSettingsRoute
+  '/account/settings': typeof AccountSettingsRouteWithChildren
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
+  '/user/$userId': typeof UserUserIdRoute
   '/docs': typeof DocsIndexRoute
+  '/account/settings/avatar': typeof AccountSettingsAvatarRoute
+  '/account/settings/security': typeof AccountSettingsSecurityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -148,10 +172,13 @@ export interface FileRoutesById {
   '/account/password-reset': typeof AccountPasswordResetRoute
   '/account/register': typeof AccountRegisterRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
-  '/account/settings': typeof AccountSettingsRoute
+  '/account/settings': typeof AccountSettingsRouteWithChildren
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
+  '/user/$userId': typeof UserUserIdRoute
   '/docs/': typeof DocsIndexRoute
+  '/account/settings/avatar': typeof AccountSettingsAvatarRoute
+  '/account/settings/security': typeof AccountSettingsSecurityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -170,7 +197,10 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
+    | '/user/$userId'
     | '/docs/'
+    | '/account/settings/avatar'
+    | '/account/settings/security'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -187,7 +217,10 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
+    | '/user/$userId'
     | '/docs'
+    | '/account/settings/avatar'
+    | '/account/settings/security'
   id:
     | '__root__'
     | '/'
@@ -204,7 +237,10 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
+    | '/user/$userId'
     | '/docs/'
+    | '/account/settings/avatar'
+    | '/account/settings/security'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -219,9 +255,10 @@ export interface RootRouteChildren {
   AccountPasswordResetRoute: typeof AccountPasswordResetRoute
   AccountRegisterRoute: typeof AccountRegisterRoute
   AccountResetPasswordRoute: typeof AccountResetPasswordRoute
-  AccountSettingsRoute: typeof AccountSettingsRoute
+  AccountSettingsRoute: typeof AccountSettingsRouteWithChildren
   DocsAttributionRoute: typeof DocsAttributionRoute
   DocsPrivacyPolicyRoute: typeof DocsPrivacyPolicyRoute
+  UserUserIdRoute: typeof UserUserIdRoute
   DocsIndexRoute: typeof DocsIndexRoute
 }
 
@@ -332,8 +369,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsPrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/user/$userId': {
+      id: '/user/$userId'
+      path: '/user/$userId'
+      fullPath: '/user/$userId'
+      preLoaderRoute: typeof UserUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/settings/avatar': {
+      id: '/account/settings/avatar'
+      path: '/avatar'
+      fullPath: '/account/settings/avatar'
+      preLoaderRoute: typeof AccountSettingsAvatarRouteImport
+      parentRoute: typeof AccountSettingsRoute
+    }
+    '/account/settings/security': {
+      id: '/account/settings/security'
+      path: '/security'
+      fullPath: '/account/settings/security'
+      preLoaderRoute: typeof AccountSettingsSecurityRouteImport
+      parentRoute: typeof AccountSettingsRoute
+    }
   }
 }
+
+interface AccountSettingsRouteChildren {
+  AccountSettingsAvatarRoute: typeof AccountSettingsAvatarRoute
+  AccountSettingsSecurityRoute: typeof AccountSettingsSecurityRoute
+}
+
+const AccountSettingsRouteChildren: AccountSettingsRouteChildren = {
+  AccountSettingsAvatarRoute: AccountSettingsAvatarRoute,
+  AccountSettingsSecurityRoute: AccountSettingsSecurityRoute,
+}
+
+const AccountSettingsRouteWithChildren = AccountSettingsRoute._addFileChildren(
+  AccountSettingsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -347,9 +419,10 @@ const rootRouteChildren: RootRouteChildren = {
   AccountPasswordResetRoute: AccountPasswordResetRoute,
   AccountRegisterRoute: AccountRegisterRoute,
   AccountResetPasswordRoute: AccountResetPasswordRoute,
-  AccountSettingsRoute: AccountSettingsRoute,
+  AccountSettingsRoute: AccountSettingsRouteWithChildren,
   DocsAttributionRoute: DocsAttributionRoute,
   DocsPrivacyPolicyRoute: DocsPrivacyPolicyRoute,
+  UserUserIdRoute: UserUserIdRoute,
   DocsIndexRoute: DocsIndexRoute,
 }
 export const routeTree = rootRouteImport
