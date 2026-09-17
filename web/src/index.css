@@ -1,0 +1,192 @@
+/* SPDX-FileCopyrightText: 2026 Bruno Zingg
+ * SPDX-License-Identifier: MPL-2.0
+ *
+ * LingoLab design tokens. Source of truth: the `lingolab-design` skill.
+ * All colours are OKLCH, converted from the hex values in that document.
+ * Never use raw hex in components - always reference a token.
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Self-hosted fonts (OFL). No CDN: the browser must not call third parties. */
+@import "@fontsource-variable/lexend";
+@import "@fontsource-variable/atkinson-hyperlegible-next";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 0.75rem;
+
+  /* --- Light theme --- */
+  --background: oklch(98.43% 0.004 106.47); /* #FAFAF7 warm off-white */
+  --foreground: oklch(22.64% 0.0135 291.83); /* #1C1B22 ink */
+
+  --card: oklch(100% 0 0);
+  --card-foreground: var(--foreground);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(51.09% 0.0861 186.39); /* #0F766E Lingo Teal, 5.47:1 on white */
+  --primary-foreground: oklch(100% 0 0);
+
+  --secondary: oklch(95.5% 0.006 106.5);
+  --secondary-foreground: var(--foreground);
+
+  /* shadcn treats --accent as the subtle hover/focus surface, so it stays a warm
+     neutral. The design system's Coral lives in --highlight and is applied
+     deliberately, never as chrome. */
+  --accent: oklch(95.5% 0.006 106.5);
+  --accent-foreground: var(--foreground);
+
+  /* Coral: highlights, streaks, celebration only. Never destructive. */
+  --highlight: oklch(68.82% 0.1724 33.33); /* #F26B4F */
+  --highlight-foreground: oklch(22.64% 0.0135 291.83); /* ink, 5.69:1 */
+
+  --muted: oklch(95.5% 0.006 106.5); /* warm stone */
+  --muted-foreground: oklch(48% 0.012 106.5);
+
+  --destructive: oklch(50.03% 0.1821 29.51); /* #B42318 */
+  --destructive-foreground: oklch(100% 0 0);
+
+  --border: oklch(90.5% 0.008 106.5);
+  --input: oklch(90.5% 0.008 106.5);
+  --ring: oklch(51.09% 0.0861 186.39);
+
+  /* --- Answer tiles (Stage). Okabe-Ito, colour-blind safe.
+     Every slot pairs colour with a shape; colour is never the only signal. --- */
+  --answer-1: oklch(75.27% 0.1576 76.77); /* #E69F00 orange  - circle   */
+  --answer-2: oklch(73.45% 0.1174 236.18); /* #56B4E9 sky     - square   */
+  --answer-3: oklch(61.98% 0.1295 165.46); /* #009E73 green   - triangle */
+  --answer-4: oklch(67.94% 0.1177 346.32); /* #CC79A7 purple  - star     */
+  --answer-5: oklch(90.16% 0.1721 105.04); /* #F0E442 yellow  - hexagon  */
+  --answer-6: oklch(53.19% 0.1313 244.05); /* #0072B2 blue    - diamond  */
+
+  --answer-1-foreground: oklch(22.64% 0.0135 291.83);
+  --answer-2-foreground: oklch(22.64% 0.0135 291.83);
+  --answer-3-foreground: oklch(22.64% 0.0135 291.83);
+  --answer-4-foreground: oklch(22.64% 0.0135 291.83);
+  --answer-5-foreground: oklch(22.64% 0.0135 291.83);
+  --answer-6-foreground: oklch(100% 0 0); /* blue needs white, 5.19:1 */
+
+  --font-display: "Lexend Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Atkinson Hyperlegible Next Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark {
+  --background: oklch(18.7% 0.0063 271.07); /* #121316 */
+  --foreground: oklch(96.6% 0.0053 106.5); /* #F4F4F0 */
+
+  --card: oklch(22.5% 0.006 271);
+  --card-foreground: var(--foreground);
+  --popover: oklch(22.5% 0.006 271);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(78.45% 0.1325 181.91); /* #2DD4BF, 9.18:1 with ink */
+  --primary-foreground: oklch(18.7% 0.0063 271.07);
+
+  --secondary: oklch(27% 0.006 271);
+  --secondary-foreground: var(--foreground);
+
+  --accent: oklch(27% 0.006 271);
+  --accent-foreground: var(--foreground);
+
+  --highlight: oklch(68.82% 0.1724 33.33);
+  --highlight-foreground: oklch(22.64% 0.0135 291.83);
+
+  --muted: oklch(27% 0.006 271);
+  --muted-foreground: oklch(72% 0.01 271);
+
+  --destructive: oklch(60% 0.19 29.5);
+  --destructive-foreground: oklch(100% 0 0);
+
+  --border: oklch(31% 0.007 271);
+  --input: oklch(31% 0.007 271);
+  --ring: oklch(78.45% 0.1325 181.91);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-answer-1: var(--answer-1);
+  --color-answer-2: var(--answer-2);
+  --color-answer-3: var(--answer-3);
+  --color-answer-4: var(--answer-4);
+  --color-answer-5: var(--answer-5);
+  --color-answer-6: var(--answer-6);
+  --color-answer-1-foreground: var(--answer-1-foreground);
+  --color-answer-2-foreground: var(--answer-2-foreground);
+  --color-answer-3-foreground: var(--answer-3-foreground);
+  --color-answer-4-foreground: var(--answer-4-foreground);
+  --color-answer-5-foreground: var(--answer-5-foreground);
+  --color-answer-6-foreground: var(--answer-6-foreground);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+  /* Scores, timers and join codes must not jitter as digits change. */
+  .tabular-nums,
+  time,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Reading text stays in the 60-75 character band. */
+  .prose-measure {
+    max-width: 68ch;
+  }
+}
+
+/* No confetti, no motion, for anyone who asked not to have it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

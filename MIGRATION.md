@@ -7,16 +7,31 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 ## Phase 0: Foundation (no routes yet)
 
-- [ ] Vite + React + TS strict scaffold, Biome, Vitest, Playwright configured
-- [ ] Tailwind v4 + shadcn/ui initialised; tokens, fonts and light/dark theme implemented per the `lingolab-design` skill
-- [ ] `/styleguide` dev-only route showing colours, type scale, buttons, inputs, cards and answer tiles in both themes
-- [ ] TanStack Router (file-based) + TanStack Query wired up, 404 and error boundary (legacy `+error.svelte`)
-- [ ] `gen:api` script + `api/client.ts` (cookies included)
-- [ ] Auth context: `/api/v1/users/check`, `requireAuth` guard helper, logout
-- [ ] i18n: locales copied from `frontend/src/lib/i18n/locales`, language detection, `LanguageToggle`
-- [ ] App shell: Navbar, Footer (legacy `lib/navbar.svelte`, `lib/footer.svelte`), `navbarVisible` behaviour
-- [ ] `realtime/socket.ts` + `realtime/events.ts` (typed from `classquiz/socket_server` + `SocketIo.md`)
-- [ ] Port `lib/hashcash.ts` (proof-of-work captcha used on register/login)
+- [x] Vite + React + TS strict scaffold, Biome, Vitest, Playwright configured
+- [x] Tailwind v4 + shadcn/ui initialised; tokens, fonts and light/dark theme implemented per the `lingolab-design` skill
+- [x] `/styleguide` dev-only route showing colours, type scale, buttons, inputs, cards and answer tiles in both themes
+- [x] TanStack Router (file-based) + TanStack Query wired up, 404 and error boundary (legacy `+error.svelte`)
+- [x] `gen:api` script + `api/client.ts` (cookies included)
+- [x] Auth context: `/api/v1/users/check`, `requireAuth` guard helper, logout
+- [x] i18n: locales copied from `frontend/src/lib/i18n/locales`, language detection, `LanguageToggle`
+- [x] App shell: Navbar, Footer (legacy `lib/navbar.svelte`, `lib/footer.svelte`), `navbarVisible` behaviour
+- [x] `realtime/socket.ts` + `realtime/events.ts` (typed from `classquiz/socket_server` + `SocketIo.md`)
+- [x] Port `lib/hashcash.ts` (proof-of-work captcha used on register/login)
+
+### Phase 0 notes
+
+- **TypeScript is pinned to 5.9.3.** TS 7 (the native Go port) ships without the
+  programmatic compiler API until 7.1, which `openapi-typescript` needs; `gen:api`
+  fails outright on it. Revisit when 7.1 lands.
+- **Languages: en + de only.** Upstream ships 34 locales; the rest were not copied.
+  Adding one back is just a file plus an entry in `SUPPORTED_LANGUAGES`.
+- **Routes for later phases are registered as placeholders** (`ComingSoon`), so the
+  app shell's links stay type-checked by the router. Replace each one when its
+  phase is ported; the placeholder is not a ported route.
+- **`--accent` vs `--highlight`.** shadcn uses `--accent` for the subtle hover/focus
+  surface, but the design system calls Coral the accent. Coral therefore lives in
+  `--highlight`, and `--accent` stays a warm neutral. Use `bg-highlight` when you
+  want Coral.
 
 ## Phase 1: Accounts
 
@@ -82,4 +97,6 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 
 | Route | Quirk | Decision |
 |---|---|---|
-| | | |
+| `lib/hashcash.ts` | `mint()` takes a `bits` argument but immediately overwrites it with 8, so the parameter has never had any effect. | Behaviour kept as-is (the backend validates against 8 bits). Documented in the port; a test pins it. |
+| `lib/hashcash.ts` | Calls the global `plausible()` for timing telemetry, which throws anywhere the analytics script is absent. | Removed. Third-party analytics are ruled out by the privacy rules. |
+| `lib/footer.svelte` | Footer solicits donations for the upstream author. | Dropped. MPL attribution to ClassQuiz is kept. |
