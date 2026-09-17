@@ -37,8 +37,8 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 - [x] `/account/login` (146): password + OAuth entry. TOTP/backup/passkey branches land with `/account/settings/security`.
 - [x] `/account/register` (385): email/username/password + consent. **No captcha or proof-of-work** — legacy has none on this route and the backend accepts no such field.
-- [ ] `/account/password-reset` (172)
-- [ ] `/account/reset-password` (145)
+- [x] `/account/reset-password` (145): **requests** the reset mail. Despite the name, this is the entry point linked from login/register.
+- [x] `/account/password-reset` (172): **consumes** the token from that mail. The names are inverted upstream; kept, since they appear in already-sent emails.
 - [ ] `/account/oauth-error` (54)
 - [ ] `/account/settings` (331)
 - [ ] `/account/settings/security` (295): passkeys via `@simplewebauthn/browser`
@@ -115,3 +115,11 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `account/register` | Unreachable `You stupid Mawoka!` fallback title and body. | Dropped: debug residue and upstream branding. |
 | `account/register` | Every failed attempt calls `window.location.reload()`, discarding everything typed — painful after a 409, where one field needs changing. | **Not replicated.** Closing the dialog leaves the form intact. Success navigates to `/account/login` instead of `/`, which said nothing about the confirmation mail. |
 | `account/register` | A "Forgot password?" link sits on the registration form, for people who by definition have no account yet. | Kept. |
+| `account/reset-password` | Route names are inverted: `/account/reset-password` *requests* the mail while `/account/password-reset` *consumes* the token. Confirmed by `forgotten_password.jinja2`, which links to `/account/password-reset?token=`. | Kept. The names are in already-sent emails and in users' bookmarks; renaming is not a parity-phase change. |
+| `account/password-reset` | `let { token: string } = data` is a destructuring **rename**, binding the token to a local called `string` and leaving `token` undefined where the body is built. Every reset therefore goes out as `{password, token: undefined}` and fails with 400 — **the legacy route cannot complete a reset at all.** | **Fixed, not replicated.** A broken route, not intended behaviour: the server loader exists only to read `?token`. Unit + e2e tests pin that the token is actually sent. |
+| `account/reset-password` | `else if (res.status === 404) alert('user not found!')` is unreachable: `forgotten_password` filters on `verified=True` and returns 200 whatever it finds. | **Dropped.** Porting it would leak account existence the moment the backend changed. The confirmation is worded conditionally ("if an account exists for ..."), and a unit test pins the anti-enumeration contract. |
+| `account/password-reset` | Neither page handles a missing or empty `?token`; legacy renders the form and fails on submit. | **New state**: the form is replaced by an explanation and a link to request a fresh mail. Legacy only ever reached that path because of the `token` bug above. |
+| both reset routes | Errors are reported with native `alert()`; success uses `window.location.assign`. | Replaced with inline messages, a toast on success, and client-side navigation, matching login and register. |
+| both reset routes | Each page hardcodes an `<h2>ClassQuiz</h2>` wordmark. | Replaced with `APP_NAME` from `config.ts` (no-ClassQuiz-branding rule). |
+| `account/reset-password` | Sets `navbarVisible.visible = true` while `account/password-reset` does not, so the two halves of one flow render with different chrome. | Both render in the standard app shell; `web/` has no `navbarVisible` equivalent. |
+| `account/password-reset` | The password form has no username field, so password managers cannot file the new password against an account (Chrome warns in the console). | A hidden, empty `autocomplete="username"` input is added. The page knows only the token, and no endpoint maps a token to a user — deliberately, since that would leak the address to anyone holding a token. |
