@@ -72,7 +72,29 @@
     "greeting": "Schön, dich zu sehen!",
     "create_account": "Account erstellen",
     "forgot_password?": "Passwort vergessen?",
-    "already_have_account?": "Hast du schon einen Account?"
+    "already_have_account?": "Hast du schon einen Account?",
+    "consent_privacy": "Ich habe die <0>Datenschutzerklärung</0> gelesen.",
+    "consent_tos": "Ich stimme den <0>Nutzungsbedingungen</0> zu.",
+    "errors": {
+      "email_invalid": "Gib eine gültige E-Mail-Adresse ein.",
+      "username_short": "Der Nutzername muss mindestens 3 Zeichen lang sein.",
+      "username_long": "Der Nutzername darf höchstens 20 Zeichen lang sein.",
+      "password_short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+      "password_long": "Das Passwort darf höchstens 100 Zeichen lang sein.",
+      "passwords_differ": "Die Passwörter stimmen nicht überein.",
+      "privacy_required": "Du musst die Datenschutzerklärung akzeptieren, um dich zu registrieren.",
+      "tos_required": "Du musst den Nutzungsbedingungen zustimmen, um dich zu registrieren."
+    },
+    "modal": {
+      "success_title": "Account erstellt.",
+      "success_body": "Schau in dein Postfach und bestätige deine E-Mail-Adresse, um die Registrierung abzuschließen.",
+      "exists_title": "Account existiert bereits",
+      "exists_body": "Es gibt bereits einen Account mit dieser E-Mail-Adresse oder diesem Nutzernamen.",
+      "invalid_email_title": "E-Mail-Adresse prüfen",
+      "invalid_email_body": "Diese E-Mail-Adresse konnte nicht akzeptiert werden. Bitte prüfe sie und versuche es erneut.",
+      "error_title": "Da ist etwas schiefgelaufen",
+      "error_body": "Der Account konnte nicht erstellt werden. Bitte versuche es gleich noch einmal."
+    }
   },
   "login_page": {
     "welcome_back": "Willkommen zurück.",

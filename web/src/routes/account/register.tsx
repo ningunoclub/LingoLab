@@ -1,9 +1,25 @@
+// SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
 // SPDX-FileCopyrightText: 2026 Bruno Zingg
 // SPDX-License-Identifier: MPL-2.0
-import { createFileRoute } from '@tanstack/react-router';
-import { ComingSoon } from '@/components/ComingSoon';
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { currentUserQuery } from '@/auth/auth';
+import { RegisterCard } from '@/features/auth/RegisterCard';
 
-// Placeholder. Ported later in Phase 1; see MIGRATION.md.
+function RegisterPage() {
+  return (
+    <div className="flex items-center justify-center px-4 py-12">
+      <RegisterCard />
+    </div>
+  );
+}
+
 export const Route = createFileRoute('/account/register')({
-  component: () => <ComingSoon route="/account/register" />,
+  // Legacy `+page.server.ts`: a signed-in visitor is redirected to the dashboard.
+  beforeLoad: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData(currentUserQuery);
+    if (user) {
+      throw redirect({ to: '/dashboard' });
+    }
+  },
+  component: RegisterPage,
 });
