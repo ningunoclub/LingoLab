@@ -16,6 +16,10 @@ import { Route as PlayRouteImport } from './routes/play'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as AccountLoginRouteImport } from './routes/account/login'
+import { Route as AccountOauthErrorRouteImport } from './routes/account/oauth-error'
+import { Route as AccountPasswordResetRouteImport } from './routes/account/password-reset'
+import { Route as AccountRegisterRouteImport } from './routes/account/register'
+import { Route as AccountResetPasswordRouteImport } from './routes/account/reset-password'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DocsAttributionRouteImport } from './routes/docs/attribution'
@@ -56,6 +60,26 @@ const AccountLoginRoute = AccountLoginRouteImport.update({
   path: '/account/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountOauthErrorRoute = AccountOauthErrorRouteImport.update({
+  id: '/account/oauth-error',
+  path: '/account/oauth-error',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountPasswordResetRoute = AccountPasswordResetRouteImport.update({
+  id: '/account/password-reset',
+  path: '/account/password-reset',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRegisterRoute = AccountRegisterRouteImport.update({
+  id: '/account/register',
+  path: '/account/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountResetPasswordRoute = AccountResetPasswordRouteImport.update({
+  id: '/account/reset-password',
+  path: '/account/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
   id: '/account/settings',
   path: '/account/settings',
@@ -85,6 +109,10 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
+  '/account/oauth-error': typeof AccountOauthErrorRoute
+  '/account/password-reset': typeof AccountPasswordResetRoute
+  '/account/register': typeof AccountRegisterRoute
+  '/account/reset-password': typeof AccountResetPasswordRoute
   '/account/settings': typeof AccountSettingsRoute
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
@@ -98,6 +126,10 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
+  '/account/oauth-error': typeof AccountOauthErrorRoute
+  '/account/password-reset': typeof AccountPasswordResetRoute
+  '/account/register': typeof AccountRegisterRoute
+  '/account/reset-password': typeof AccountResetPasswordRoute
   '/account/settings': typeof AccountSettingsRoute
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
@@ -112,6 +144,10 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
+  '/account/oauth-error': typeof AccountOauthErrorRoute
+  '/account/password-reset': typeof AccountPasswordResetRoute
+  '/account/register': typeof AccountRegisterRoute
+  '/account/reset-password': typeof AccountResetPasswordRoute
   '/account/settings': typeof AccountSettingsRoute
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
@@ -127,6 +163,10 @@ export interface FileRouteTypes {
     | '/search'
     | '/styleguide'
     | '/account/login'
+    | '/account/oauth-error'
+    | '/account/password-reset'
+    | '/account/register'
+    | '/account/reset-password'
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
@@ -140,6 +180,10 @@ export interface FileRouteTypes {
     | '/search'
     | '/styleguide'
     | '/account/login'
+    | '/account/oauth-error'
+    | '/account/password-reset'
+    | '/account/register'
+    | '/account/reset-password'
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
@@ -153,6 +197,10 @@ export interface FileRouteTypes {
     | '/search'
     | '/styleguide'
     | '/account/login'
+    | '/account/oauth-error'
+    | '/account/password-reset'
+    | '/account/register'
+    | '/account/reset-password'
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
@@ -167,6 +215,10 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   StyleguideRoute: typeof StyleguideRoute
   AccountLoginRoute: typeof AccountLoginRoute
+  AccountOauthErrorRoute: typeof AccountOauthErrorRoute
+  AccountPasswordResetRoute: typeof AccountPasswordResetRoute
+  AccountRegisterRoute: typeof AccountRegisterRoute
+  AccountResetPasswordRoute: typeof AccountResetPasswordRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   DocsAttributionRoute: typeof DocsAttributionRoute
   DocsPrivacyPolicyRoute: typeof DocsPrivacyPolicyRoute
@@ -224,6 +276,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/oauth-error': {
+      id: '/account/oauth-error'
+      path: '/account/oauth-error'
+      fullPath: '/account/oauth-error'
+      preLoaderRoute: typeof AccountOauthErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/password-reset': {
+      id: '/account/password-reset'
+      path: '/account/password-reset'
+      fullPath: '/account/password-reset'
+      preLoaderRoute: typeof AccountPasswordResetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/register': {
+      id: '/account/register'
+      path: '/account/register'
+      fullPath: '/account/register'
+      preLoaderRoute: typeof AccountRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/reset-password': {
+      id: '/account/reset-password'
+      path: '/account/reset-password'
+      fullPath: '/account/reset-password'
+      preLoaderRoute: typeof AccountResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/settings': {
       id: '/account/settings'
       path: '/account/settings'
@@ -263,6 +343,10 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   StyleguideRoute: StyleguideRoute,
   AccountLoginRoute: AccountLoginRoute,
+  AccountOauthErrorRoute: AccountOauthErrorRoute,
+  AccountPasswordResetRoute: AccountPasswordResetRoute,
+  AccountRegisterRoute: AccountRegisterRoute,
+  AccountResetPasswordRoute: AccountResetPasswordRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   DocsAttributionRoute: DocsAttributionRoute,
   DocsPrivacyPolicyRoute: DocsPrivacyPolicyRoute,

@@ -97,7 +97,23 @@
       }
     },
     "use_backup_code": "Backup-Code benutzen",
-    "email_or_username": "E-Mail oder Benutzername"
+    "email_or_username": "E-Mail oder Benutzername",
+    "methods": {
+      "title": "Wie möchtest du dich anmelden?",
+      "password": "Passwort",
+      "password_description": "Mit deinem Passwort anmelden",
+      "passkey": "Passkey",
+      "passkey_description": "Mit einem Sicherheitsschlüssel oder deinem Gerät anmelden",
+      "totp": "Authenticator-App",
+      "totp_description": "Einmalcode aus deiner App eingeben"
+    },
+    "password_title": "Gib dein Passwort ein",
+    "verified_badge": "Deine E-Mail-Adresse wurde bestätigt.",
+    "back": "Zurück",
+    "oauth_with": "Weiter mit {{provider}}",
+    "or": "oder",
+    "unsupported_method": "Diese Anmeldemethode ist in dieser Version noch nicht verfügbar.",
+    "wrong_credentials_help": "Prüfe E-Mail-Adresse und Passwort und versuche es erneut."
   },
   "words": {
     "question": "Frage",

@@ -92,7 +92,23 @@
         }
       }
     },
-    "use_backup_code": "Use backup-code"
+    "use_backup_code": "Use backup-code",
+    "methods": {
+      "title": "How do you want to sign in?",
+      "password": "Password",
+      "password_description": "Sign in with your password",
+      "passkey": "Passkey",
+      "passkey_description": "Sign in with a security key or your device",
+      "totp": "Authenticator app",
+      "totp_description": "Enter a one-time code from your app"
+    },
+    "password_title": "Enter your password",
+    "verified_badge": "You've successfully confirmed your email address.",
+    "back": "Back",
+    "oauth_with": "Continue with {{provider}}",
+    "or": "or",
+    "unsupported_method": "This sign-in method isn't available yet in this version.",
+    "wrong_credentials_help": "Check your email address and password, then try again."
   },
   "words": {
     "question": "Question",
