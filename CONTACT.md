@@ -1,10 +1,13 @@
 <!--
 SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
+SPDX-FileCopyrightText: 2026 Bruno Zingg
 
 SPDX-License-Identifier: MPL-2.0
 -->
-Welcome to the ClassQuiz community
+Welcome to the LingoLab community
 
 Grant and indulge critique constructively, within desired privacy.
 Settle disputes within these confines.
-Finding yourselves unable, e-mail hi@mawoka.eu answered by Marlon (Mawoka), the project maintainer.
+
+Found a bug, including a security-related one? Please open an issue on
+[GitHub](https://github.com/ningunoclub/LingoLab/issues) — see [`CONTRIBUTING.md`](CONTRIBUTING.md).

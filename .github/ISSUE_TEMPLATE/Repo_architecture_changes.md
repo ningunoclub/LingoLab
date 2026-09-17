@@ -1,5 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
+SPDX-FileCopyrightText: 2026 Bruno Zingg
 
 SPDX-License-Identifier: MPL-2.0
 -->
@@ -16,4 +17,4 @@ A clear and concise description of the improvement you're asking for.
 **Additional context**
 Add any other context about the problem here.
 
-Thanks for contributing to ClassQuiz!
+Thanks for contributing to LingoLab!
