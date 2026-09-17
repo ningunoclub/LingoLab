@@ -35,14 +35,18 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 ## Phase 1: Accounts
 
-- [x] `/account/login` (146): password + OAuth entry. TOTP/backup/passkey branches land with `/account/settings/security`.
+- [x] `/account/login` (146): password + OAuth entry. **The TOTP/backup/passkey *sign-in* branches are still stubbed**
+  (`SUPPORTED_METHODS = ['PASSWORD']` in `web/src/features/auth/useLoginFlow.ts`); the picker filters the rest out.
+  `/account/settings/security` covers *enrolling* those factors, not signing in with them. Signing in with them needs
+  `startAuthentication()` plus the TOTP/backup code forms, and is tracked as its own task below.
 - [x] `/account/register` (385): email/username/password + consent. **No captcha or proof-of-work** — legacy has none on this route and the backend accepts no such field.
 - [x] `/account/reset-password` (145): **requests** the reset mail. Despite the name, this is the entry point linked from login/register.
 - [x] `/account/password-reset` (172): **consumes** the token from that mail. The names are inverted upstream; kept, since they appear in already-sent emails.
 - [x] `/account/oauth-error` (54): landing page for a failed GitHub sign-in. Reached only by a backend redirect.
 - [x] `/account/settings` (331): profile, password change, API keys, sessions. Ported as one page; the four sections are independent.
-- [ ] `/account/settings/security` (295): passkeys via `@simplewebauthn/browser`
+- [x] `/account/settings/security` (295 + 133 in two child components): backup code, TOTP, passkeys via `@simplewebauthn/browser`, and the require-password switch.
 - [x] `/account/settings/avatar` (178): 12-step avataaars wizard. **Not** an upload/crop screen and no `@uppy` — the uploader decision belongs to Phase 2's editor/media routes.
+- [ ] **Login second-factor branches**: complete TOTP, backup-code and passkey *sign-in* in `/account/login`, lifting `SUPPORTED_METHODS`. Depends on `/account/settings/security` (done), which is where those factors get enrolled.
 
 ## Phase 2: Core loop (create → host → play → results). The thesis-critical part
 
@@ -148,3 +152,10 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `account/settings/avatar` | The reveal fades its controls in after an unconditional 3.5s delay and animates for 4s, ignoring `prefers-reduced-motion`. | **Fixed.** Motion is dropped and the controls are usable immediately under reduced motion. |
 | `account/settings/avatar` | `grid-cols-6` with a fixed preview column: at 390px the preview collapses to ~65px and the wizard is unusable on a phone. | **Fixed.** Preview sits above the grid on small screens, sticky beside it from `sm` up. |
 | `account/settings` (PR #6) | `avatar.tsx` and `security.tsx` sat under `routes/account/settings/`, which TanStack nests under `/account/settings`. That route renders no `<Outlet />`, so **neither child could ever render**, and the parent guard redirected with its own `returnTo`. Legacy has no shared settings layout. | **Fixed here.** Moved to `routes/account/settings_/`; the trailing underscore un-nests them, so both are top-level routes again. URLs unchanged. |
+| `account/settings/security` | `save_password_required()` sends the request even when the password prompt is cancelled (`pw` is `null`), then reads `.require_password` off the resulting 401 body `{detail:"Invalid"}`, setting the switch to `undefined`. The other five handlers all guard with `if (!pw) return;`. | **Fixed.** Same guard as its five siblings; a 401 raises `WrongPasswordError` and the switch keeps its server value. |
+| `account/settings/security` | `aria-checked` is hardcoded as the string `"true"`/`"false"` in two branches instead of bound to state. The values happen to match their branch, so the exposed state is accidentally correct. | **Fixed by construction.** shadcn `Switch` derives `aria-checked` and `disabled` from `checked`. |
+| `account/settings/security` | Dead loop in `add_security_key`: `for (let i = 0; i++; i < resp_data.excludeCredentials.length)` has the condition and update clauses swapped, so the body never runs. It meant to strip `transports` from excluded credentials. | **Dropped, no behaviour change.** The backend already sends `transports: []`. |
+| `account/settings/security` | `authenticatorAttachment` is forced to `'cross-platform'`, overriding the backend and preventing platform authenticators (Touch ID, Windows Hello) from enrolling. | **Replicated.** Changing which devices can enrol is a behaviour change; flagged for after parity. |
+| `account/settings/security` | A failed WebAuthn ceremony rethrows and shows nothing: a dismissed browser prompt or an already-registered key looks like the button simply did nothing. | **Fixed.** `WebAuthnError` is reported as a toast, with a distinct message for a cancelled ceremony. |
+| `account/settings/security` | Clicking the backup-code *text* downloads it, but only once (`already_downloaded`), while the button always downloads. Invisible to keyboard users and fires a download on what looks like a text selection. | **Dropped.** The explicit download button covers it for every input method; the code stays selectable. |
+| `account/settings/security` | The overlays are fixed `p-48` three-column grids, unusable below roughly 1100px. | **Fixed.** Ordinary dialogs that stack on a phone; verified at 390px. |

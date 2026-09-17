@@ -527,6 +527,43 @@
       "enter_as_secret_if_no_see_code": "Enter this as the secret if you can't scan the QR-code",
       "totp_setup": "TOTP-setup",
       "do_not_forget_backup_code": "Do not forget to save your recovery-code!"
+    },
+    "page_title": "Security",
+    "page_hint": "Add a second step to signing in, so your account stays yours even if your password leaks.",
+    "confirm_password": {
+      "title": "Confirm your password",
+      "description": "Enter your password to continue with this change.",
+      "label": "Current password",
+      "submit": "Confirm"
+    },
+    "backup_code_hint": "A one-time code that gets you back in if you lose your second factor.",
+    "replace_backup_code_title": "Replace your backup code?",
+    "replace_backup_code_body": "Your current backup code stops working straight away. Make sure you save the new one.",
+    "totp_hint": "Use an authenticator app to generate a six-digit code when you sign in.",
+    "totp_enabled": "TOTP is on.",
+    "totp_disabled": "TOTP is off.",
+    "webauthn_hint": "Sign in with a hardware security key instead of typing a code.",
+    "no_security_keys": "No security keys yet.",
+    "security_key_label": "Security key {{number}}",
+    "remove_security_key": "Remove",
+    "remove_security_key_title": "Remove this security key?",
+    "remove_security_key_body": "You will not be able to sign in with this key any more.",
+    "security_key_added": "Security key added.",
+    "security_key_removed": "Security key removed.",
+    "require_password_label": "Also ask for my password",
+    "require_password_hint": "When this is off, your second factor alone signs you in.",
+    "require_password_needs_totp": "Turn on TOTP first.",
+    "require_password_saved": "Setting saved.",
+    "errors": {
+      "wrong_password": "That password is not correct.",
+      "load_failed": "That didn't load. Please try again.",
+      "backup_code_failed": "The backup code could not be created.",
+      "totp_failed": "The TOTP setting could not be changed.",
+      "security_key_failed": "The security key could not be added.",
+      "security_key_cancelled": "Adding the security key was cancelled.",
+      "security_key_unsupported": "This browser cannot add security keys.",
+      "remove_key_failed": "The security key could not be removed.",
+      "require_password_failed": "The setting could not be saved."
     }
   },
   "view_quiz_page": {
