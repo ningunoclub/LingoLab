@@ -4,6 +4,6 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ComingSoon } from '@/components/ComingSoon';
 
 // Placeholder. Ported later in Phase 1; see MIGRATION.md.
-export const Route = createFileRoute('/account/settings/avatar')({
-  component: () => <ComingSoon route="/account/settings/avatar" />,
+export const Route = createFileRoute('/account/settings_/security')({
+  component: () => <ComingSoon route="/account/settings/security" />,
 });

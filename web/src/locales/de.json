@@ -473,7 +473,13 @@
     "thats_you": "Das bist du!",
     "start_over": "Neu anfangen",
     "clothe_type": "Kleidung",
-    "go_back": "Zurückkehren"
+    "go_back": "Zurückkehren",
+    "title": "Dein Avatar",
+    "step_counter": "Schritt {{current}} von {{total}}",
+    "preview_alt": "Dein bisheriger Avatar",
+    "option_alt": "{{feature}}, Option {{number}}",
+    "saved": "Gespeichert",
+    "save_failed": "Dein Avatar konnte nicht gespeichert werden. Bitte versuche es erneut."
   },
   "results_page": {
     "quiz_title": "Quiz-Titel",

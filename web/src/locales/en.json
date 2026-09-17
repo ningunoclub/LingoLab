@@ -461,7 +461,13 @@
     "clothe_graphic_type": "Graphic",
     "thats_you": "That's You!",
     "start_over": "Start over",
-    "go_back": "Go back"
+    "go_back": "Go back",
+    "title": "Your avatar",
+    "step_counter": "Step {{current}} of {{total}}",
+    "preview_alt": "Your avatar so far",
+    "option_alt": "{{feature}}, option {{number}}",
+    "saved": "Saved",
+    "save_failed": "Your avatar couldn't be saved. Please try again."
   },
   "results_page": {
     "no_results_so_far": "No results saved so far...",
