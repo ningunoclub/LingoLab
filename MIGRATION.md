@@ -16,7 +16,7 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 - [x] i18n: locales copied from `frontend/src/lib/i18n/locales`, language detection, `LanguageToggle`
 - [x] App shell: Navbar, Footer (legacy `lib/navbar.svelte`, `lib/footer.svelte`), `navbarVisible` behaviour
 - [x] `realtime/socket.ts` + `realtime/events.ts` (typed from `classquiz/socket_server` + `SocketIo.md`)
-- [x] Port `lib/hashcash.ts` (proof-of-work captcha used on register/login)
+- [x] Port `lib/hashcash.ts` (proof-of-work helper; **unused** — see the note under `/account/register`)
 
 ### Phase 0 notes
 
@@ -35,8 +35,8 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 ## Phase 1: Accounts
 
-- [ ] `/account/login` (146)
-- [ ] `/account/register` (385)
+- [x] `/account/login` (146): password + OAuth entry. TOTP/backup/passkey branches land with `/account/settings/security`.
+- [x] `/account/register` (385): email/username/password + consent. **No captcha or proof-of-work** — legacy has none on this route and the backend accepts no such field.
 - [ ] `/account/password-reset` (172)
 - [ ] `/account/reset-password` (145)
 - [ ] `/account/oauth-error` (54)
@@ -100,3 +100,18 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `lib/hashcash.ts` | `mint()` takes a `bits` argument but immediately overwrites it with 8, so the parameter has never had any effect. | Behaviour kept as-is (the backend validates against 8 bits). Documented in the port; a test pins it. |
 | `lib/hashcash.ts` | Calls the global `plausible()` for timing telemetry, which throws anywhere the analytics script is absent. | Removed. Third-party analytics are ruled out by the privacy rules. |
 | `lib/footer.svelte` | Footer solicits donations for the upstream author. | Dropped. MPL attribution to ClassQuiz is kept. |
+| `account/login` | `/login/start` answers for unknown *and* unverified accounts with a decoy session offering PASSWORD, so the password step then fails with 401. | Intentional anti-enumeration in the backend. Preserved: the UI reveals nothing about whether an account exists. |
+| `account/login` | `check_auto()` removes unsupported methods with `splice` inside an index-based loop, which skips an element when two unsupported entries are adjacent. | Reimplemented as a non-mutating filter. Same observable result for a set of at most four members. |
+| `account/login` | Wrong credentials are reported with a native `alert()`; an unparseable 401 body does `alert("This shouldn't happen")` + reload. The translated `login_page.modal.error.*` keys sit unused behind commented-out code. | Replaced with an inline field error plus a toast, using those existing keys. |
+| `account/login` | `?verified` is tested with `!== null`, so `?verified=false` also shows the success badge. | Kept as presence-only. |
+| `account/login` | Success calls `window.location.reload()` after a 100 ms `setTimeout` and lets the server layout redirect. | Replaced with query invalidation + client-side navigation. No full reload. |
+| `account/login` | `returnTo` is taken from the query string and redirected to unchecked (open redirect). | **Fixed, not replicated.** Only same-origin paths are accepted; anything else falls back to `/dashboard`. |
+| `login/select_method.svelte` | Options are `<div>`s with `onclick`/`onkeyup`, so the picker is not reliably keyboard operable, and its labels are hardcoded English while the rest of the page is translated. | Rebuilt as real `<button>`s with new `login_page.methods.*` keys in en + de. |
+| `login/oauth_block.svelte` | Stray `console.log(github_auth_enabled)` on every render. | Dropped (debug residue; privacy rules forbid logging). |
+| `account/register` | The task brief assumed registration was gated by `VITE_CAPTCHA_ENABLED` + hCaptcha/reCAPTCHA. It is not: that flag's only consumer is `dashboard/start_game.svelte` (captcha for *players joining a game*) and the third-party scripts load in `play/join.svelte`. | No captcha on register. The third-party-script decision belongs to `/play` and `/dashboard` and is deferred to those routes. |
+| `lib/hashcash.ts` | Dead code upstream: nothing imports `mint()`. Phase 0 ported it on the assumption that register used it. | Left unused in `web/` too (the `plausible` call was already stripped in Phase 0). Keep or drop it with the `/play` captcha decision; note the backend has no PoW verifier. |
+| `account/register` | `423 Locked` (`settings.registration_disabled`) is not handled; it falls into the generic "unexpected error" branch. | Replicated. Worth its own message once self-hosting docs exist — an admin disabling registration is a state this deployment target will reach. |
+| `account/register` | The 400 modal says "This email-address doesn't exist!", but the backend returns 400 when `validate_email` rejects a *malformed* address. | Meaning kept (bad address), wording corrected — the legacy sentence states something false. |
+| `account/register` | Unreachable `You stupid Mawoka!` fallback title and body. | Dropped: debug residue and upstream branding. |
+| `account/register` | Every failed attempt calls `window.location.reload()`, discarding everything typed — painful after a 409, where one field needs changing. | **Not replicated.** Closing the dialog leaves the form intact. Success navigates to `/account/login` instead of `/`, which said nothing about the confirmation mail. |
+| `account/register` | A "Forgot password?" link sits on the registration form, for people who by definition have no account yet. | Kept. |

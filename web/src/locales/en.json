@@ -67,7 +67,29 @@
     "greeting": "Nice to meet you!",
     "create_account": "Create account",
     "forgot_password?": "Forgot password?",
-    "already_have_account?": "Already have an account?"
+    "already_have_account?": "Already have an account?",
+    "consent_privacy": "I've read the <0>privacy policy</0>.",
+    "consent_tos": "I agree to the <0>terms of service</0>.",
+    "errors": {
+      "email_invalid": "Enter a valid email address.",
+      "username_short": "Username must be at least 3 characters long.",
+      "username_long": "Username must be at most 20 characters long.",
+      "password_short": "Password must be at least 8 characters long.",
+      "password_long": "Password must be at most 100 characters long.",
+      "passwords_differ": "Passwords do not match.",
+      "privacy_required": "You must accept the privacy policy to register.",
+      "tos_required": "You must accept the terms of service to register."
+    },
+    "modal": {
+      "success_title": "Account created.",
+      "success_body": "Check your inbox and confirm your email address to finish signing up.",
+      "exists_title": "Account already exists",
+      "exists_body": "An account with that email address or username already exists.",
+      "invalid_email_title": "Check the email address",
+      "invalid_email_body": "That email address could not be accepted. Please check it and try again.",
+      "error_title": "Something went wrong",
+      "error_body": "The account could not be created. Please try again in a moment."
+    }
   },
   "login_page": {
     "welcome_back": "Welcome back.",
@@ -92,7 +114,23 @@
         }
       }
     },
-    "use_backup_code": "Use backup-code"
+    "use_backup_code": "Use backup-code",
+    "methods": {
+      "title": "How do you want to sign in?",
+      "password": "Password",
+      "password_description": "Sign in with your password",
+      "passkey": "Passkey",
+      "passkey_description": "Sign in with a security key or your device",
+      "totp": "Authenticator app",
+      "totp_description": "Enter a one-time code from your app"
+    },
+    "password_title": "Enter your password",
+    "verified_badge": "You've successfully confirmed your email address.",
+    "back": "Back",
+    "oauth_with": "Continue with {{provider}}",
+    "or": "or",
+    "unsupported_method": "This sign-in method isn't available yet in this version.",
+    "wrong_credentials_help": "Check your email address and password, then try again."
   },
   "words": {
     "question": "Question",
