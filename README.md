@@ -1,126 +1,118 @@
 <!--
 SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
+SPDX-FileCopyrightText: 2026 Bruno Zingg
 
 SPDX-License-Identifier: MPL-2.0
 -->
 
-<a href="https://github.com/mawoka-myblock/ClassQuiz/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/mawoka-myblock/classquiz?style=for-the-badge"></a>
-<a href="https://github.com/mawoka-myblock/ClassQuiz/graphs/contributors"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/mawoka-myblock/classquiz?color=green&style=for-the-badge"></a>
-<a href="https://github.com/mawoka-myblock/ClassQuiz/network/members"><img alt="GitHub forks" src="https://img.shields.io/github/forks/mawoka-myblock/classquiz?style=for-the-badge"></a>
-<a href="https://github.com/mawoka-myblock/ClassQuiz/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mawoka-myblock/classquiz?style=for-the-badge"></a>
-<a href="https://github.com/mawoka-myblock/ClassQuiz/blob/master/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/mawoka-myblock/classquiz?style=for-the-badge"></a>
-<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/mawoka-myblock/classquiz?style=for-the-badge">
-[![DeepSource](https://deepsource.io/gh/mawoka-myblock/ClassQuiz.svg/?label=active+issues&show_trend=true&token=5-2Na9HN-2CXcGkHjah_Rk09&style=for-the-badge)](https://deepsource.io/gh/mawoka-myblock/ClassQuiz/)
-<img alt="Snky badge" src="https://img.shields.io/badge/Snyk-Check-success?style=for-the-badge">
-[![codecov](https://codecov.io/gh/mawoka-myblock/ClassQuiz/branch/master/graph/badge.svg?token=7CHK2A0AMO)](https://codecov.io/gh/mawoka-myblock/ClassQuiz)
+<a href="https://github.com/ningunoclub/LingoLab/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/ningunoclub/LingoLab?style=for-the-badge"></a>
+<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/ningunoclub/LingoLab?style=for-the-badge">
 
 <div align='center'>
-    <h2 align='center'>ClassQuiz</h2>
-    <img src='logo.png' alt='ClassQuiz Logo' height='100px' width='100px'>
+    <h2 align='center'>LingoLab</h2>
     <p align='center'>
-        The open-source quiz-platform!
+        A self-hostable, game-based learning platform for EFL (English as a Foreign Language) teachers
         <br/>
-        <a href='https://classquiz.de/'><strong>Visit the website »</strong></a>
         <br />
-        <br />
-        <a href='https://classquiz.de/docs'>Docs</a>
+        <a href='MIGRATION.md'>Migration status</a>
         ·
-        <a href='https://classquiz.de/account/register'>Register</a>
+        <a href='CONTRIBUTING.md'>Contributing</a>
         ·
-        <a href='https://classquiz.de/docs/self-host'>Self-Hosting</a>
-        ·
-        <a href='https://matrix.to/#/#classquiz:matrix.org'>Matrix Space</a>
+        <a href='CONTACT.md'>Contact</a>
     </p>
 </div>
 
+## About LingoLab
 
-## About ClassQuiz
+LingoLab is a self-hostable, game-based learning platform built for EFL teachers to create
+interactive quizzes and games that students play together in class. Teachers create an
+activity once and students join remotely to compete on their knowledge.
 
-ClassQuiz is a quiz app to learn interactively for students,
-but open-source which is very important if it is a product for educational
-purposes.
-You can create quizzes and play them remotely with other people.
-It is mainly made for teachers who create a
-quiz, so students can compete with their knowledge against each other.
+LingoLab is a fork of [ClassQuiz](https://github.com/mawoka-myblock/ClassQuiz) by Marlon W
+(Mawoka), developed as part of Bruno Zingg's Master's thesis at PHZH (MA Secondary Education).
+It targets self-hosted deployment via Docker Compose behind a Cloudflare Tunnel, with no
+third-party browser calls (no CDN fonts, analytics, or captcha scripts), in line with Swiss
+revFADP and GDPR requirements for a platform used by teachers and minors.
 
-## Try it
+## Project status
 
-There is a hosted version at [classquiz.de](https://classquiz.de?utm_medium=Github&utm_source=Readme). The server is
-located in Karlsruhe, Germany and hosted by [netcup](https://mawoka.eu/redir?token=2), so expect some latency depending
-on your location.
-
-## Help/Community
-
-Join our [Matrix Space](https://matrix.to/#/#classquiz:matrix.org) using [element](https://app.element.io)!
-
-## Donating
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K3CK3ES)
-
-<a href="https://liberapay.com/Mawoka/donate"><img src="https://img.shields.io/liberapay/goal/Mawoka.svg?logo=liberapay"></a>
+The project is currently in a **frontend rewrite phase**: the legacy SvelteKit app
+([`frontend/`](frontend/)) is being ported route by route to a new React + TypeScript app
+([`web/`](web/)), following the checklist in [`MIGRATION.md`](MIGRATION.md). During this phase
+the goal is behavioural parity with the legacy app — no new features or redesigned flows yet.
+Planned after parity: class/group management and new EFL game archetypes.
 
 ## Self-Host
 
-Please see https://classquiz.de/docs/self-host
+```bash
+docker compose -f compose.dev.yml up -d
+```
+
+This starts the backend services (API on `:8000`). See [`compose.dev.yml`](compose.dev.yml)
+for the full service list, and add `--profile legacy` to also run the legacy frontend on
+`:8080` for side-by-side comparison during the rewrite.
 
 ## Development
 
-See https://classquiz.de/docs/develop
+```bash
+docker compose -f compose.dev.yml up -d          # backend services (api on :8000)
+pnpm -C web dev                                  # React app on http://localhost:5173
+pnpm -C web typecheck
+pnpm -C web lint
+pnpm -C web test                                 # Vitest
+pnpm -C web e2e                                  # Playwright
+pnpm -C web gen:api                              # regenerate typed API client
+```
 
-## Translation
-
-ClassQuiz uses [hosted Weblate](https://hosted.weblate.org/engage/classquiz/)
-
-
-<a href="https://hosted.weblate.org/engage/classquiz/">
-<img src="https://hosted.weblate.org/widgets/classquiz/-/frontend/multi-auto.svg" alt="Übersetzungsstatus" />
-</a>
-
-## Docs
-
-The docs are online at https://classquiz.de/docs
+See [`CLAUDE.md`](CLAUDE.md) for full repo layout, conventions, and workflow.
 
 ### Things to know about the structure
 
-Since this repo is a monorepo, the frontend is located in
-the [`frontend/`](https://github.com/mawoka-myblock/ClassQuiz/tree/master/frontend)-directory.
-The backend-project (Pipfile) is in the root, but all the code is located in
-the [`classquiz/`](https://github.com/mawoka-myblock/ClassQuiz/tree/master/frontend)-folder.
+This repo is a monorepo:
 
-#### Tech-Stack
+- [`classquiz/`](classquiz/) — FastAPI backend (upstream, unmodified during the rewrite phase)
+- [`migrations/`](migrations/) — Alembic DB migrations (upstream)
+- [`frontend/`](frontend/) — legacy SvelteKit app; read-only reference for the rewrite, deleted once parity is reached
+- [`web/`](web/) — new React + TypeScript app; all frontend work happens here
+
+#### Tech stack
 
 ##### Backend
 
-The backend is made with [FastAPI](https://fastapi.tiangolo.com/) (web-framework)
-, [ormar](https://github.com/collerek/ormar/) (ORM)
-, [python-socketio](https://python-socketio.readthedocs.io/en/latest/) (realtime-communication between server and
-client)
+The backend is made with [FastAPI](https://fastapi.tiangolo.com/) (web framework),
+[ormar](https://github.com/collerek/ormar/) (ORM), and
+[python-socketio](https://python-socketio.readthedocs.io/en/latest/) (realtime communication
+between server and client).
 
 ##### Frontend
 
-The frontend is made with [SvelteKit](https://kit.svelte.dev/) (web-framework)
-and [TailwindCSS](https://tailwindcss.com/) (Css-Framework).
+The new frontend ([`web/`](web/)) is made with [React](https://react.dev/),
+[TypeScript](https://www.typescriptlang.org/), [TanStack Router](https://tanstack.com/router)
+and [TanStack Query](https://tanstack.com/query), [Tailwind CSS](https://tailwindcss.com/) and
+[shadcn/ui](https://ui.shadcn.com/).
 
-##### External Dependencies
+The legacy frontend ([`frontend/`](frontend/)) is made with [SvelteKit](https://kit.svelte.dev/)
+and [TailwindCSS](https://tailwindcss.com/).
 
-Selfhostable:
+##### External dependencies
 
-- [Meilisearch](https://www.meilisearch.com/) (Search-Server)
-- [Caddy](https://caddyserver.com/) (Reverse Proxy)
-- [Postgres](https://www.postgresql.org/) (Database)
-- [Redis](https://redis.io/) (Cache)
+Self-hostable:
 
-Closed-Source 3rd parties:
+- [Meilisearch](https://www.meilisearch.com/) (search server)
+- [Caddy](https://caddyserver.com/) (reverse proxy)
+- [Postgres](https://www.postgresql.org/) (database)
+- [Redis](https://redis.io/) (cache)
 
-- [Mapbox](https://www.mapbox.com/) (maps)
-- [hCaptcha](https://www.hcaptcha.com/) (captcha)
+No closed-source third-party services (Mapbox, hCaptcha, etc.) are used — see the privacy
+rules in [`CLAUDE.md`](CLAUDE.md).
 
 ---
 
 ## License Note
 
 This repository is licensed under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/);
+please review the license to understand your rights and obligations.
 
-please review the license to understand your rights and obligations.[^1]
-
-[^1]: I added this note, since people are stealing my software and changing it without providing the source-code.
+LingoLab is a fork of [ClassQuiz](https://github.com/mawoka-myblock/ClassQuiz), also MPL-2.0
+licensed. Files carried over or closely adapted from upstream keep the original copyright
+notice alongside ours; see [`CLAUDE.md`](CLAUDE.md) for the project's licensing conventions.
