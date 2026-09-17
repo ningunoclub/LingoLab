@@ -318,7 +318,27 @@
     "download_template_here": "Lade die Vorlage herunter"
   },
   "password_reset_page": {
-    "reset_password": "Passwort zurücksetzen"
+    "reset_password": "Passwort zurücksetzen",
+    "request": {
+      "description": "Gib die Adresse ein, mit der du dich registriert hast. Wir senden dir einen Link, um ein neues Passwort zu wählen.",
+      "submit": "Link senden",
+      "sent_title": "Schau in deinen Posteingang",
+      "sent_body": "Falls ein Konto für {{email}} existiert, ist ein Link unterwegs. Der Link ist eine Stunde lang gültig.",
+      "sent_hint": "Keine Mail erhalten? Sieh im Spam-Ordner nach oder versuche eine andere Adresse."
+    },
+    "set": {
+      "description": "Wähle ein neues Passwort für dein Konto.",
+      "submit": "Neues Passwort speichern",
+      "signed_out_notice": "Wenn du ein neues Passwort speicherst, wirst du auf allen anderen Geräten abgemeldet.",
+      "done_title": "Passwort aktualisiert",
+      "done_body": "Du kannst dich jetzt mit deinem neuen Passwort anmelden.",
+      "invalid_token_title": "Dieser Link ist nicht mehr gültig",
+      "invalid_token_body": "Links laufen nach einer Stunde ab und können nur einmal verwendet werden. Fordere einen neuen an, um fortzufahren.",
+      "missing_token_title": "In diesem Link fehlt etwas",
+      "missing_token_body": "Öffne den Link aus deiner E-Mail erneut oder fordere einen neuen an.",
+      "request_new_link": "Neuen Link anfordern",
+      "error_body": "Das Passwort konnte nicht geändert werden. Bitte versuche es erneut."
+    }
   },
   "settings_page": {
     "repeat_password": "Passwort wiederholen",

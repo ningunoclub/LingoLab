@@ -306,7 +306,27 @@
     "export_results": "Export results"
   },
   "password_reset_page": {
-    "reset_password": "Reset password"
+    "reset_password": "Reset password",
+    "request": {
+      "description": "Enter the address you signed up with and we'll send you a link to choose a new password.",
+      "submit": "Send reset link",
+      "sent_title": "Check your inbox",
+      "sent_body": "If an account exists for {{email}}, a reset link is on its way. The link is valid for one hour.",
+      "sent_hint": "No mail? Check your spam folder, or try a different address."
+    },
+    "set": {
+      "description": "Choose a new password for your account.",
+      "submit": "Save new password",
+      "signed_out_notice": "Saving a new password signs you out on all your other devices.",
+      "done_title": "Password updated",
+      "done_body": "You can now log in with your new password.",
+      "invalid_token_title": "This link is no longer valid",
+      "invalid_token_body": "Reset links expire after an hour and can only be used once. Request a new one to continue.",
+      "missing_token_title": "Something is missing from this link",
+      "missing_token_body": "Open the link from your reset email again, or request a new one.",
+      "request_new_link": "Request a new link",
+      "error_body": "The password could not be changed. Please try again."
+    }
   },
   "settings_page": {
     "old_password": "Old password",
