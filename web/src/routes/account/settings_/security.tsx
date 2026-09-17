@@ -1,9 +1,13 @@
+// SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
 // SPDX-FileCopyrightText: 2026 Bruno Zingg
 // SPDX-License-Identifier: MPL-2.0
 import { createFileRoute } from '@tanstack/react-router';
-import { ComingSoon } from '@/components/ComingSoon';
+import { requireAuth } from '@/auth/auth';
+import { SecuritySettings } from '@/features/settings/SecuritySettings';
 
-// Placeholder. Ported later in Phase 1; see MIGRATION.md.
 export const Route = createFileRoute('/account/settings_/security')({
-  component: () => <ComingSoon route="/account/settings/security" />,
+  // Legacy relies on the parent layout to keep signed-out visitors out. Guarded
+  // explicitly here, like the rest of /account/settings.
+  beforeLoad: ({ context }) => requireAuth(context.queryClient, '/account/settings/security'),
+  component: SecuritySettings,
 });
