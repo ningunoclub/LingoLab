@@ -11,19 +11,21 @@ import { Label } from '@/components/ui/label';
 type Props = {
   onSubmit: (password: string) => void;
   onBack: () => void;
+  /** Legacy offers "Use backup-code" on the password screen too. */
+  onUseBackupCode: () => void;
   isPending: boolean;
   /** Set after a 401, so the message sits next to the field rather than in a toast only. */
   errorMessage: string | null;
 };
 
-/**
- * Password challenge, ported from `password_component.svelte`.
- *
- * The legacy "Use backup-code" link is intentionally absent here: backup codes arrive
- * with the 2FA PR, and offering a link to a screen that does not exist would be worse
- * than omitting it.
- */
-export function PasswordStep({ onSubmit, onBack, isPending, errorMessage }: Props) {
+/** Password challenge, ported from `password_component.svelte`. */
+export function PasswordStep({
+  onSubmit,
+  onBack,
+  onUseBackupCode,
+  isPending,
+  errorMessage,
+}: Props) {
   const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const fieldId = useId();
@@ -61,6 +63,14 @@ export function PasswordStep({ onSubmit, onBack, isPending, errorMessage }: Prop
               {errorMessage}
             </p>
           ) : null}
+          <Button
+            type="button"
+            variant="link"
+            className="self-start px-0"
+            onClick={onUseBackupCode}
+          >
+            {t('login_page.use_backup_code')}
+          </Button>
         </div>
 
         <div className="flex items-center justify-between gap-4">

@@ -105,4 +105,19 @@ describe('submitLoginStep', () => {
     expect(url?.searchParams.get('session_id')).toBe('sess-9');
     expect(body).toEqual({ auth_type: 'PASSWORD', data: 'pw' });
   });
+
+  it('sends the passkey assertion as a JSON object, not a string', async () => {
+    let body: unknown;
+    server.use(
+      http.post(STEP_URL, async ({ request }) => {
+        body = await request.json();
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const assertion = { id: 'cred', rawId: 'cred', type: 'public-key', response: {} };
+
+    await submitLoginStep({ sessionId: 's', step: 1, authType: 'PASSKEY', data: assertion });
+
+    expect(body).toEqual({ auth_type: 'PASSKEY', data: assertion });
+  });
 });

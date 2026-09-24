@@ -63,7 +63,12 @@ export type StepOutcome =
   /** 202: this factor passed, a second one is required. */
   | { kind: 'need-second-factor' };
 
-/** Raised when the backend rejects the credentials (401). */
+/**
+ * Raised when the backend rejects a factor (401): wrong password, wrong TOTP code,
+ * wrong backup code, a failed passkey assertion, or an expired/decoy session. The
+ * backend's `detail` is not reliable enough to tell these apart (a failed passkey
+ * answers with a bare 401), so the screen that submitted the factor picks the message.
+ */
 export class WrongCredentialsError extends Error {
   constructor() {
     super('wrong credentials');
@@ -81,14 +86,17 @@ export async function submitLoginStep(params: {
   sessionId: string;
   step: 1 | 2;
   authType: AuthMethod;
-  data: string;
+  /** A string for PASSWORD/TOTP/BACKUP, the WebAuthn assertion object for PASSKEY. */
+  data: string | object;
 }): Promise<StepOutcome> {
   const { response } = await fetchClient.POST('/api/v1/login/step/{step_id}', {
     params: {
       path: { step_id: params.step },
       query: { session_id: params.sessionId },
     },
-    body: { auth_type: params.authType, data: params.data },
+    // The generated schema types the dict branch as `Record<string, never>` because
+    // the backend declares a bare `dict`; the assertion object is what it expects.
+    body: { auth_type: params.authType, data: params.data as string | Record<string, never> },
   });
 
   if (response.status === 200) return { kind: 'signed-in' };

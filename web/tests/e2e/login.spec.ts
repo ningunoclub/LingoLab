@@ -77,13 +77,44 @@ test('shows the confirmation badge after email verification', async ({ page }) =
 });
 
 test('offers a choice when the account has several usable methods', async ({ page }) => {
-  await mockLoginBackend(page, { stepStatus: 200, step1: ['PASSWORD', 'PASSKEY'] });
+  await mockLoginBackend(page, { stepStatus: 200, step1: ['PASSWORD', 'TOTP'] });
 
   await page.goto('/account/login');
   await page.getByLabel('Email or Username').fill('teacher@school.ch');
   await page.getByRole('button', { name: 'Continue' }).click();
 
-  // PASSKEY is not buildable yet, so the flow goes straight to the password step
-  // rather than offering a method that cannot be completed.
-  await expect(page.getByLabel('Password')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'How do you want to sign in?' })).toBeVisible();
+  await page.getByRole('button', { name: /Authenticator app/ }).click();
+  await expect(page.getByLabel('One-time code')).toBeVisible();
+});
+
+test('asks for a TOTP code after the password when the account requires both', async ({ page }) => {
+  await mockLoginBackend(page, { stepStatus: 200, step1: ['PASSWORD'], step2: ['TOTP'] });
+  const steps: string[] = [];
+  await page.route('**/api/v1/login/step/**', (route) => {
+    const step = new URL(route.request().url()).pathname.split('/').pop() ?? '';
+    steps.push(step);
+    return route.fulfill({ status: step === '1' ? 202 : 200, body: '' });
+  });
+
+  await page.goto('/account/login');
+  await page.getByLabel('Email or Username').fill('teacher@school.ch');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByLabel('Password').fill('correct-horse');
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  const code = page.getByLabel('One-time code');
+  await expect(code).toBeVisible();
+  await page.route('**/api/v1/users/check', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ email: 'teacher@school.ch' }),
+    }),
+  );
+  await code.fill('123456');
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  await expect(page).toHaveURL(/\/dashboard/);
+  expect(steps).toEqual(['1', '2']);
 });
