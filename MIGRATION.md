@@ -16,7 +16,7 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 - [x] i18n: locales copied from `frontend/src/lib/i18n/locales`, language detection, `LanguageToggle`
 - [x] App shell: Navbar, Footer (legacy `lib/navbar.svelte`, `lib/footer.svelte`), `navbarVisible` behaviour
 - [x] `realtime/socket.ts` + `realtime/events.ts` (typed from `classquiz/socket_server` + `SocketIo.md`)
-- [x] Port `lib/hashcash.ts` (proof-of-work helper; **unused** — see the note under `/account/register`)
+- [x] ~~Port `lib/hashcash.ts`~~ (proof-of-work helper). Ported, never used, **deleted** with the `/dashboard` start-game dialog (see Legacy quirks)
 
 ### Phase 0 notes
 
@@ -47,9 +47,9 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 ## Phase 2: Core loop (create → host → play → results). The thesis-critical part
 
-- [ ] `/dashboard` (438 + ~450 in components). **Split into two PRs:**
+- [x] `/dashboard` (438 + ~450 in components). **Split into two PRs:**
   - [x] quiz list: search, cards with cover image, analytics, download, delete (`lib/components/DownloadQuiz.svelte`, `lib/editor/MediaComponent.svelte` → shared `components/MediaComponent.tsx`)
-  - [ ] start-game dialog (`lib/dashboard/start_game.svelte`). Decided: no player captcha (always sends `captcha_enabled=False`), no ClassQuizControllers toggle, `lib/hashcash.ts` deleted
+  - [x] start-game dialog (`lib/dashboard/start_game.svelte`). Decided: no player captcha (always sends `captcha_enabled=False`), no ClassQuizControllers toggle, `lib/hashcash.ts` deleted
 - [ ] `/create` (138)
 - [ ] `/edit` (176): quiz editor, `lib/editor/*`. **Largest piece. Split into several PRs:**
   - [ ] editor shell + sidebar + slide list (drag and drop)
@@ -113,7 +113,7 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 
 | Route | Quirk | Decision |
 |---|---|---|
-| `lib/hashcash.ts` | `mint()` takes a `bits` argument but immediately overwrites it with 8, so the parameter has never had any effect. | Behaviour kept as-is (the backend validates against 8 bits). Documented in the port; a test pins it. |
+| `lib/hashcash.ts` | `mint()` takes a `bits` argument but immediately overwrites it with 8, so the parameter has never had any effect. | Behaviour kept as-is (the backend validates against 8 bits). Documented in the port; a test pins it. Moot since the file was deleted (see below). |
 | `lib/hashcash.ts` | Calls the global `plausible()` for timing telemetry, which throws anywhere the analytics script is absent. | Removed. Third-party analytics are ruled out by the privacy rules. |
 | `lib/footer.svelte` | Footer solicits donations for the upstream author. | Dropped. MPL attribution to ClassQuiz is kept. |
 | `account/login` | `/login/start` answers for unknown *and* unverified accounts with a decoy session offering PASSWORD, so the password step then fails with 401. | Intentional anti-enumeration in the backend. Preserved: the UI reveals nothing about whether an account exists. |
@@ -124,8 +124,8 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `account/login` | `returnTo` is taken from the query string and redirected to unchecked (open redirect). | **Fixed, not replicated.** Only same-origin paths are accepted; anything else falls back to `/dashboard`. |
 | `login/select_method.svelte` | Options are `<div>`s with `onclick`/`onkeyup`, so the picker is not reliably keyboard operable, and its labels are hardcoded English while the rest of the page is translated. | Rebuilt as real `<button>`s with new `login_page.methods.*` keys in en + de. |
 | `login/oauth_block.svelte` | Stray `console.log(github_auth_enabled)` on every render. | Dropped (debug residue; privacy rules forbid logging). |
-| `account/register` | The task brief assumed registration was gated by `VITE_CAPTCHA_ENABLED` + hCaptcha/reCAPTCHA. It is not: that flag's only consumer is `dashboard/start_game.svelte` (captcha for *players joining a game*) and the third-party scripts load in `play/join.svelte`. | No captcha on register. The third-party-script decision belongs to `/play` and `/dashboard` and is deferred to those routes. |
-| `lib/hashcash.ts` | Dead code upstream: nothing imports `mint()`. Phase 0 ported it on the assumption that register used it. | Left unused in `web/` too (the `plausible` call was already stripped in Phase 0). Keep or drop it with the `/play` captcha decision; note the backend has no PoW verifier. |
+| `account/register` | The task brief assumed registration was gated by `VITE_CAPTCHA_ENABLED` + hCaptcha/reCAPTCHA. It is not: that flag's only consumer is `dashboard/start_game.svelte` (captcha for *players joining a game*) and the third-party scripts load in `play/join.svelte`. | No captcha on register. The third-party-script decision belongs to `/play` and `/dashboard` and is deferred to those routes. **Update:** decided at `/dashboard`: no player captcha, games always start with `captcha_enabled=false`. Games started from `web/` never need the captcha scripts in `/play`; one started directly through the API still defaults to captcha on, which `/play` must handle when it is ported. |
+| `lib/hashcash.ts` | Dead code upstream: nothing imports `mint()`. Phase 0 ported it on the assumption that register used it. | **Deleted** together with the player-captcha decision in the `/dashboard` start-game dialog (Bruno, 2026-09-24). The backend has no proof-of-work verifier, so nothing depended on it. |
 | `account/register` | `423 Locked` (`settings.registration_disabled`) is not handled; it falls into the generic "unexpected error" branch. | Replicated. Worth its own message once self-hosting docs exist — an admin disabling registration is a state this deployment target will reach. |
 | `account/register` | The 400 modal says "This email-address doesn't exist!", but the backend returns 400 when `validate_email` rejects a *malformed* address. | Meaning kept (bad address), wording corrected — the legacy sentence states something false. |
 | `account/register` | Unreachable `You stupid Mawoka!` fallback title and body. | Dropped: debug residue and upstream branding. |
@@ -191,3 +191,13 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `dashboard` | The analytics modal ends with a hardcoded English "thank You for using ClassQuiz!" blurb. `<title>` is "ClassQuiz - Dashboard". | Both dropped (no-ClassQuiz-branding rule; no route in `web/` sets a title yet). |
 | `lib/editor/MediaComponent.svelte` | Decodes the `X-Thumbhash` and `X-Alt-Text` headers unconditionally; a file without them (anything outside the storage table) throws and never renders. It also downloads images as blobs just to build an object URL. | Missing headers mean no placeholder / no alt text. Images load through a plain same-origin `src`. |
 | `lib/components/DownloadQuiz.svelte` | The Excel file is named `ClassQuiz-<title>.xlsx` by the backend. | **Replicated**: the name is set server-side (`eximport.py`), which the rewrite phase does not touch. |
+| `dashboard/start_game.svelte` | Offers a player captcha that loads **Google reCAPTCHA** in every player's browser (`VITE_CAPTCHA_ENABLED`); the dialog's own notice says the consent of every player is needed. | **Dropped** (privacy rules: no third-party scripts; players are minors). The request always sends `captcha_enabled=false`, because `POST /quiz/start` defaults the flag to **true** when it is omitted. |
+| `dashboard/start_game.svelte` | "ClassQuizControllers" toggle for physical buzzer devices, linking to `/controller`, with the upstream name in the UI. | **Dropped** (Bruno: no buzzers needed). `cqcs_enabled` is not sent; its backend default is false. |
+| `dashboard/start_game.svelte` | With the captcha on, the request omits `randomize_answers`, so shuffling was silently switched off. | Moot: no captcha branch. Randomize is always sent. |
+| `dashboard/start_game.svelte` | `custom_field` is interpolated into the query string unencoded; a label like "Name & class" was cut at the `&`. | **Fixed**: sent as an encoded query parameter (verified against the real backend). |
+| `dashboard/start_game.svelte` | Any non-200 answer shows `alert('Starting game failed')` and then sends the teacher to the login page, even for a 404. | Inline error in the dialog; only a 401 goes to `/account/login?returnTo=/dashboard`. |
+| `dashboard/start_game.svelte` | The success redirect appends `cqc_code=${data.cqc_code}`, i.e. the literal string `null` when controllers are off, which legacy `/admin` passes on to `GameNotStarted`. | Not sent (controllers dropped). `/admin` gets `token`, `pin` and `connect=1`, with the same URL shape as legacy. |
+| `dashboard/start_game.svelte` | Game modes are clickable `<div>`s (no keyboard access). The internal names are swapped against the labels: `kahoot` is shown as "Normal", `normal` as "Old-School". | A labelled radio group. The backend values are unchanged. |
+| `dashboard/start_game.svelte` | Hardcoded English: "Captcha enabled/disabled", "Randomize answers", the controller text, and the custom-field placeholder "Phone Number or Email". | New `start_game.*` keys (en + de). The placeholder is now "e.g. Class": the old example invited teachers to collect contact details from minors. |
+| `dashboard/start_game.svelte` | Calls the global `plausible()` on every game start. | Dropped (privacy rules; the call also throws where the script is absent). |
+| `dashboard/start_game.svelte` | Esc/backdrop listeners are added on mount and never removed; the background is a patterned SVG. | Replaced by the shadcn Dialog; no background pattern (design rules). |

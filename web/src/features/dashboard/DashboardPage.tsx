@@ -24,6 +24,7 @@ import { AnalyticsDialog } from './AnalyticsDialog';
 import { DashboardItemCard } from './DashboardItemCard';
 import { DownloadQuizDialog } from './DownloadQuizDialog';
 import { type DashboardItem, dashboardQueries, deleteDashboardItem } from './dashboardApi';
+import { StartGameDialog } from './StartGameDialog';
 import { createItemIndex, searchItems } from './searchItems';
 
 function TopActions() {
@@ -73,6 +74,7 @@ export function DashboardPage() {
   const [analyticsItem, setAnalyticsItem] = useState<DashboardItem | null>(null);
   const [downloadId, setDownloadId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<DashboardItem | null>(null);
+  const [startItem, setStartItem] = useState<DashboardItem | null>(null);
 
   const index = useMemo(() => createItemIndex(items.data ?? []), [items.data]);
   const visible = useMemo(
@@ -91,10 +93,6 @@ export function DashboardPage() {
     onError: () => toast.error(t('dashboard.errors.delete_failed')),
     onSettled: () => setPendingDelete(null),
   });
-
-  // The start-game dialog is ported in a follow-up PR; until then Play says so.
-  const startGame = () =>
-    toast(t('styleguide.not_ported_title'), { description: t('styleguide.not_ported_body') });
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-10">
@@ -161,7 +159,7 @@ export function DashboardPage() {
                   key={`${item.type}-${item.id}`}
                   item={item}
                   onAnalytics={setAnalyticsItem}
-                  onStartGame={startGame}
+                  onStartGame={setStartItem}
                   onDelete={setPendingDelete}
                   onDownload={(quiz) => setDownloadId(quiz.id)}
                 />
@@ -173,6 +171,7 @@ export function DashboardPage() {
 
       <AnalyticsDialog item={analyticsItem} onClose={() => setAnalyticsItem(null)} />
       <DownloadQuizDialog quizId={downloadId} onClose={() => setDownloadId(null)} />
+      <StartGameDialog quiz={startItem} onClose={() => setStartItem(null)} />
 
       <AlertDialog
         open={pendingDelete !== null}

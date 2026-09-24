@@ -143,3 +143,58 @@ test('sends signed-out visitors to the login page', async ({ page }) => {
   await expect(page).toHaveURL(/\/account\/login/);
   expect(new URL(page.url()).searchParams.get('returnTo')).toBe('/dashboard');
 });
+
+test('starts a game from a quiz and opens the host screen', async ({ page }) => {
+  await mockDashboard(page);
+  let startUrl: URL | null = null;
+  await page.route('**/api/v1/quiz/start/*', (route) => {
+    startUrl = new URL(route.request().url());
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ game_id: 'game-uuid', game_pin: '482913', cqc_code: null }),
+    });
+  });
+  await page.goto('/dashboard');
+
+  const verbs = page.getByRole('listitem').filter({ hasText: 'Irregular verbs' });
+  await verbs.getByRole('button', { name: 'Play' }).click();
+
+  const dialog = page.getByRole('dialog');
+  // No captcha or controller toggles any more.
+  await expect(dialog.getByText(/captcha/i)).toHaveCount(0);
+  await expect(dialog.getByRole('radio', { name: /Normal/ })).toBeChecked();
+  await dialog.getByRole('radio', { name: /Old-School/ }).check();
+  await dialog.getByLabel('Custom field').fill('Class');
+  await dialog.getByRole('switch', { name: 'Randomize answers' }).click();
+  await dialog.getByRole('button', { name: 'Start Game' }).click();
+
+  // Same URL shape as legacy: bare digits, not JSON-quoted strings.
+  await expect(page).toHaveURL(/\/admin\?token=game-uuid&pin=482913&connect=1$/);
+  const admin = new URL(page.url()).searchParams;
+  expect(admin.get('token')).toBe('game-uuid');
+  expect(admin.get('pin')).toBe('482913');
+  expect(admin.get('connect')).toBe('1');
+
+  const sent = (startUrl as URL | null)?.searchParams;
+  expect(sent?.get('captcha_enabled')).toBe('false');
+  expect(sent?.get('game_mode')).toBe('normal');
+  expect(sent?.get('custom_field')).toBe('Class');
+  expect(sent?.get('randomize_answers')).toBe('true');
+});
+
+test('reports a failed game start in the dialog instead of logging out', async ({ page }) => {
+  await mockDashboard(page);
+  await page.route('**/api/v1/quiz/start/*', (route) =>
+    route.fulfill({ status: 404, contentType: 'application/json', body: '{}' }),
+  );
+  await page.goto('/dashboard');
+
+  const verbs = page.getByRole('listitem').filter({ hasText: 'Irregular verbs' });
+  await verbs.getByRole('button', { name: 'Play' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Start Game' }).click();
+
+  await expect(dialog.getByRole('alert')).toContainText('could not be started');
+  await expect(page).toHaveURL(/\/dashboard$/);
+});
