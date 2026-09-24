@@ -35,10 +35,7 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 ## Phase 1: Accounts
 
-- [x] `/account/login` (146): password + OAuth entry. **The TOTP/backup/passkey *sign-in* branches are still stubbed**
-  (`SUPPORTED_METHODS = ['PASSWORD']` in `web/src/features/auth/useLoginFlow.ts`); the picker filters the rest out.
-  `/account/settings/security` covers *enrolling* those factors, not signing in with them. Signing in with them needs
-  `startAuthentication()` plus the TOTP/backup code forms, and is tracked as its own task below.
+- [x] `/account/login` (146): password + OAuth entry. The TOTP/backup/passkey sign-in branches followed in their own PR (below).
 - [x] `/account/register` (385): email/username/password + consent. **No captcha or proof-of-work** — legacy has none on this route and the backend accepts no such field.
 - [x] `/account/reset-password` (145): **requests** the reset mail. Despite the name, this is the entry point linked from login/register.
 - [x] `/account/password-reset` (172): **consumes** the token from that mail. The names are inverted upstream; kept, since they appear in already-sent emails.
@@ -46,7 +43,7 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 - [x] `/account/settings` (331): profile, password change, API keys, sessions. Ported as one page; the four sections are independent.
 - [x] `/account/settings/security` (295 + 133 in two child components): backup code, TOTP, passkeys via `@simplewebauthn/browser`, and the require-password switch.
 - [x] `/account/settings/avatar` (178): 12-step avataaars wizard. **Not** an upload/crop screen and no `@uppy` — the uploader decision belongs to Phase 2's editor/media routes.
-- [ ] **Login second-factor branches**: complete TOTP, backup-code and passkey *sign-in* in `/account/login`, lifting `SUPPORTED_METHODS`. Depends on `/account/settings/security` (done), which is where those factors get enrolled.
+- [x] **Login second-factor branches** (~450 legacy lines): TOTP, backup-code and passkey *sign-in* in `/account/login`. `SUPPORTED_METHODS` is gone; the only filter left is legacy's own (PASSKEY dropped when the browser has no WebAuthn).
 
 ## Phase 2: Core loop (create → host → play → results). The thesis-critical part
 
@@ -89,6 +86,14 @@ Candidates to **cut** because they aren't needed for the thesis. Cutting means t
 - [ ] Update `docker-compose.yml`: remove the `frontend` service
 - [ ] Delete `frontend/` in a single, clearly named commit
 - [ ] README: fork notice, attribution to ClassQuiz, licence
+
+## Manual checks before cut-over
+
+The author does no hands-on testing until parity; automated tests and browser checks still run per PR.
+Anything only a person with a real backend/device can confirm goes here, for one pass before Phase 5.
+
+- [ ] `/account/login` (PR #10): real sign-in against `compose.dev.yml` with TOTP, with a backup code, and with a
+  passkey (the passkey request body is only unit-tested with a mocked `startAuthentication`).
 
 ## After parity (not now)
 
@@ -159,3 +164,12 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `account/settings/security` | A failed WebAuthn ceremony rethrows and shows nothing: a dismissed browser prompt or an already-registered key looks like the button simply did nothing. | **Fixed.** `WebAuthnError` is reported as a toast, with a distinct message for a cancelled ceremony. |
 | `account/settings/security` | Clicking the backup-code *text* downloads it, but only once (`already_downloaded`), while the button always downloads. Invisible to keyboard users and fires a download on what looks like a text selection. | **Dropped.** The explicit download button covers it for every input method; the code stays selectable. |
 | `account/settings/security` | The overlays are fixed `p-48` three-column grids, unusable below roughly 1100px. | **Fixed.** Ordinary dialogs that stack on a phone; verified at 390px. |
+| `account/login` (2FA) | `backup_component` treats **every** non-200 as "go to step 2" (`step += 1; selected_method = null`), so a mistyped backup code silently drops the user into the second-factor picker, or into an empty picker on a one-step account. | **Fixed, not replicated.** Inline error, the user stays on the backup screen. A unit test pins it. |
+| `account/login` (2FA) | `webauthn_component` catches a failed/dismissed ceremony, `alert('Unknown error')`s, then **still POSTs** `data: undefined`, which the backend rejects with 422 and nothing is shown. | **Fixed.** A failed ceremony sends nothing: a dismissed prompt gets a "cancelled" toast, other WebAuthn errors a "failed" toast. |
+| `account/login` (2FA) | The passkey 401 handler checks `detail === 'webauthn failed'`, but `verify_webauthn` raises a bare `HTTPException(401)`, so a rejected passkey is silent. | **Fixed** without touching the backend: every 401 on a factor shows that factor's own inline message. The backend `detail` is not relied on. |
+| `account/login` (2FA) | TOTP and passkey errors use native `alert()`; the passkey screen's "Start the Security-Key verification" is hardcoded English. `isSubmitting` is never set on the TOTP screen, so it shows no pending state. | Inline errors plus new `login_page.*` keys (en + de); the Continue/Start buttons show a spinner while pending. |
+| `account/login` (2FA) | The backup screen shows its own "Use backup-code" link, which re-selects the screen you are already on. | Dropped. The backup screen has Back instead, which returns to the screen that linked to it (legacy had no way back at all). |
+| `account/login` (2FA) | A passkey-only account in a browser without WebAuthn: `check_auto` strips PASSKEY and renders an **empty picker**, a dead end. | Explains the situation and offers the backup code, which the backend accepts at step 1 for any session. |
+| `account/login` (2FA) | The backup code must be exactly 64 characters, and the code is pasted from the downloaded `.txt`, so a trailing newline keeps Continue disabled with no hint why. | Surrounding whitespace is trimmed before the length check. The value sent is otherwise unchanged. |
+| `account/login` (2FA) | A successful backup-code sign-in rotates the code server-side (`os.urandom(32).hex()`), and nothing tells the user their saved code is now void. | **Replicated** (parity). Worth a post-sign-in notice pointing to `/account/settings/security` after parity. |
+| `locales` | `words.totp` reads "Totp" (de: "TOTP"), used only as the login code field's label. | Value changed to "One-time code" / "Einmalcode"; key kept. |
