@@ -87,6 +87,14 @@ Candidates to **cut** because they aren't needed for the thesis. Cutting means t
 - [ ] Delete `frontend/` in a single, clearly named commit
 - [ ] README: fork notice, attribution to ClassQuiz, licence
 
+## Manual checks before cut-over
+
+The author does no hands-on testing until parity; automated tests and browser checks still run per PR.
+Anything only a person with a real backend/device can confirm goes here, for one pass before Phase 5.
+
+- [ ] `/account/login` (PR #10): real sign-in against `compose.dev.yml` with TOTP, with a backup code, and with a
+  passkey (the passkey request body is only unit-tested with a mocked `startAuthentication`).
+
 ## After parity (not now)
 
 - Class/group management
