@@ -10,9 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CreateRouteImport } from './routes/create'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as ImportRouteImport } from './routes/import'
 import { Route as PlayRouteImport } from './routes/play'
+import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as AccountLoginRouteImport } from './routes/account/login'
@@ -24,13 +27,23 @@ import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DocsAttributionRouteImport } from './routes/docs/attribution'
 import { Route as DocsPrivacyPolicyRouteImport } from './routes/docs/privacy-policy'
+import { Route as EditIndexRouteImport } from './routes/edit/index'
+import { Route as EditFilesRouteImport } from './routes/edit/files'
+import { Route as QuiztivityEditRouteImport } from './routes/quiztivity/edit'
+import { Route as QuiztivityPlayRouteImport } from './routes/quiztivity/play'
 import { Route as UserUserIdRouteImport } from './routes/user/$userId'
+import { Route as ViewQuizIdRouteImport } from './routes/view/$quizId'
 import { Route as AccountSettingsAvatarRouteImport } from './routes/account/settings_/avatar'
 import { Route as AccountSettingsSecurityRouteImport } from './routes/account/settings_/security'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateRoute = CreateRouteImport.update({
+  id: '/create',
+  path: '/create',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -43,9 +56,19 @@ const ExploreRoute = ExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -103,9 +126,34 @@ const DocsPrivacyPolicyRoute = DocsPrivacyPolicyRouteImport.update({
   path: '/docs/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EditIndexRoute = EditIndexRouteImport.update({
+  id: '/edit/',
+  path: '/edit/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditFilesRoute = EditFilesRouteImport.update({
+  id: '/edit/files',
+  path: '/edit/files',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuiztivityEditRoute = QuiztivityEditRouteImport.update({
+  id: '/quiztivity/edit',
+  path: '/quiztivity/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuiztivityPlayRoute = QuiztivityPlayRouteImport.update({
+  id: '/quiztivity/play',
+  path: '/quiztivity/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UserUserIdRoute = UserUserIdRouteImport.update({
   id: '/user/$userId',
   path: '/user/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ViewQuizIdRoute = ViewQuizIdRouteImport.update({
+  id: '/view/$quizId',
+  path: '/view/$quizId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountSettingsAvatarRoute = AccountSettingsAvatarRouteImport.update({
@@ -121,9 +169,12 @@ const AccountSettingsSecurityRoute = AccountSettingsSecurityRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
+  '/import': typeof ImportRoute
   '/play': typeof PlayRoute
+  '/results': typeof ResultsRoute
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
@@ -134,16 +185,24 @@ export interface FileRoutesByFullPath {
   '/account/settings': typeof AccountSettingsRoute
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
+  '/edit/files': typeof EditFilesRoute
+  '/quiztivity/edit': typeof QuiztivityEditRoute
+  '/quiztivity/play': typeof QuiztivityPlayRoute
   '/user/$userId': typeof UserUserIdRoute
+  '/view/$quizId': typeof ViewQuizIdRoute
   '/docs/': typeof DocsIndexRoute
+  '/edit/': typeof EditIndexRoute
   '/account/settings/avatar': typeof AccountSettingsAvatarRoute
   '/account/settings/security': typeof AccountSettingsSecurityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
+  '/import': typeof ImportRoute
   '/play': typeof PlayRoute
+  '/results': typeof ResultsRoute
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
@@ -154,17 +213,25 @@ export interface FileRoutesByTo {
   '/account/settings': typeof AccountSettingsRoute
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
+  '/edit/files': typeof EditFilesRoute
+  '/quiztivity/edit': typeof QuiztivityEditRoute
+  '/quiztivity/play': typeof QuiztivityPlayRoute
   '/user/$userId': typeof UserUserIdRoute
+  '/view/$quizId': typeof ViewQuizIdRoute
   '/docs': typeof DocsIndexRoute
+  '/edit': typeof EditIndexRoute
   '/account/settings/avatar': typeof AccountSettingsAvatarRoute
   '/account/settings/security': typeof AccountSettingsSecurityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
+  '/import': typeof ImportRoute
   '/play': typeof PlayRoute
+  '/results': typeof ResultsRoute
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
@@ -175,8 +242,13 @@ export interface FileRoutesById {
   '/account/settings': typeof AccountSettingsRoute
   '/docs/attribution': typeof DocsAttributionRoute
   '/docs/privacy-policy': typeof DocsPrivacyPolicyRoute
+  '/edit/files': typeof EditFilesRoute
+  '/quiztivity/edit': typeof QuiztivityEditRoute
+  '/quiztivity/play': typeof QuiztivityPlayRoute
   '/user/$userId': typeof UserUserIdRoute
+  '/view/$quizId': typeof ViewQuizIdRoute
   '/docs/': typeof DocsIndexRoute
+  '/edit/': typeof EditIndexRoute
   '/account/settings_/avatar': typeof AccountSettingsAvatarRoute
   '/account/settings_/security': typeof AccountSettingsSecurityRoute
 }
@@ -184,9 +256,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/create'
     | '/dashboard'
     | '/explore'
+    | '/import'
     | '/play'
+    | '/results'
     | '/search'
     | '/styleguide'
     | '/account/login'
@@ -197,16 +272,24 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
+    | '/edit/files'
+    | '/quiztivity/edit'
+    | '/quiztivity/play'
     | '/user/$userId'
+    | '/view/$quizId'
     | '/docs/'
+    | '/edit/'
     | '/account/settings/avatar'
     | '/account/settings/security'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/create'
     | '/dashboard'
     | '/explore'
+    | '/import'
     | '/play'
+    | '/results'
     | '/search'
     | '/styleguide'
     | '/account/login'
@@ -217,16 +300,24 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
+    | '/edit/files'
+    | '/quiztivity/edit'
+    | '/quiztivity/play'
     | '/user/$userId'
+    | '/view/$quizId'
     | '/docs'
+    | '/edit'
     | '/account/settings/avatar'
     | '/account/settings/security'
   id:
     | '__root__'
     | '/'
+    | '/create'
     | '/dashboard'
     | '/explore'
+    | '/import'
     | '/play'
+    | '/results'
     | '/search'
     | '/styleguide'
     | '/account/login'
@@ -237,17 +328,25 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/docs/attribution'
     | '/docs/privacy-policy'
+    | '/edit/files'
+    | '/quiztivity/edit'
+    | '/quiztivity/play'
     | '/user/$userId'
+    | '/view/$quizId'
     | '/docs/'
+    | '/edit/'
     | '/account/settings_/avatar'
     | '/account/settings_/security'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateRoute: typeof CreateRoute
   DashboardRoute: typeof DashboardRoute
   ExploreRoute: typeof ExploreRoute
+  ImportRoute: typeof ImportRoute
   PlayRoute: typeof PlayRoute
+  ResultsRoute: typeof ResultsRoute
   SearchRoute: typeof SearchRoute
   StyleguideRoute: typeof StyleguideRoute
   AccountLoginRoute: typeof AccountLoginRoute
@@ -258,8 +357,13 @@ export interface RootRouteChildren {
   AccountSettingsRoute: typeof AccountSettingsRoute
   DocsAttributionRoute: typeof DocsAttributionRoute
   DocsPrivacyPolicyRoute: typeof DocsPrivacyPolicyRoute
+  EditFilesRoute: typeof EditFilesRoute
+  QuiztivityEditRoute: typeof QuiztivityEditRoute
+  QuiztivityPlayRoute: typeof QuiztivityPlayRoute
   UserUserIdRoute: typeof UserUserIdRoute
+  ViewQuizIdRoute: typeof ViewQuizIdRoute
   DocsIndexRoute: typeof DocsIndexRoute
+  EditIndexRoute: typeof EditIndexRoute
   AccountSettingsAvatarRoute: typeof AccountSettingsAvatarRoute
   AccountSettingsSecurityRoute: typeof AccountSettingsSecurityRoute
 }
@@ -271,6 +375,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create': {
+      id: '/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -287,11 +398,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/play': {
       id: '/play'
       path: '/play'
       fullPath: '/play'
       preLoaderRoute: typeof PlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -371,11 +496,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsPrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/edit/': {
+      id: '/edit/'
+      path: '/edit'
+      fullPath: '/edit/'
+      preLoaderRoute: typeof EditIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit/files': {
+      id: '/edit/files'
+      path: '/edit/files'
+      fullPath: '/edit/files'
+      preLoaderRoute: typeof EditFilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiztivity/edit': {
+      id: '/quiztivity/edit'
+      path: '/quiztivity/edit'
+      fullPath: '/quiztivity/edit'
+      preLoaderRoute: typeof QuiztivityEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiztivity/play': {
+      id: '/quiztivity/play'
+      path: '/quiztivity/play'
+      fullPath: '/quiztivity/play'
+      preLoaderRoute: typeof QuiztivityPlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/user/$userId': {
       id: '/user/$userId'
       path: '/user/$userId'
       fullPath: '/user/$userId'
       preLoaderRoute: typeof UserUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/view/$quizId': {
+      id: '/view/$quizId'
+      path: '/view/$quizId'
+      fullPath: '/view/$quizId'
+      preLoaderRoute: typeof ViewQuizIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/settings_/avatar': {
@@ -397,9 +557,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateRoute: CreateRoute,
   DashboardRoute: DashboardRoute,
   ExploreRoute: ExploreRoute,
+  ImportRoute: ImportRoute,
   PlayRoute: PlayRoute,
+  ResultsRoute: ResultsRoute,
   SearchRoute: SearchRoute,
   StyleguideRoute: StyleguideRoute,
   AccountLoginRoute: AccountLoginRoute,
@@ -410,8 +573,13 @@ const rootRouteChildren: RootRouteChildren = {
   AccountSettingsRoute: AccountSettingsRoute,
   DocsAttributionRoute: DocsAttributionRoute,
   DocsPrivacyPolicyRoute: DocsPrivacyPolicyRoute,
+  EditFilesRoute: EditFilesRoute,
+  QuiztivityEditRoute: QuiztivityEditRoute,
+  QuiztivityPlayRoute: QuiztivityPlayRoute,
   UserUserIdRoute: UserUserIdRoute,
+  ViewQuizIdRoute: ViewQuizIdRoute,
   DocsIndexRoute: DocsIndexRoute,
+  EditIndexRoute: EditIndexRoute,
   AccountSettingsAvatarRoute: AccountSettingsAvatarRoute,
   AccountSettingsSecurityRoute: AccountSettingsSecurityRoute,
 }

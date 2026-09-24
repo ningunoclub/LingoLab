@@ -433,7 +433,16 @@
     "views_n_plays": "Views & Plays",
     "info_analytics": "The \"Plays\" only show how often the quiz was started (you included), whereas the \"Views\" count how often the \"View\"-page was visited, so it also counts bots (sorry for that).",
     "commandpalette_notice": "Press <kbd>Ctr</kbd>+<kbd>k</kbd> or <kbd>Meta</kbd>+<kbd>k</kbd> to open the command palette",
-    "create_quiz": "Create a new quiz"
+    "create_quiz": "Create a new quiz",
+    "clear_search": "Clear search",
+    "no_search_results": "No quizzes match your search.",
+    "delete_title": "Delete this quiz?",
+    "delete_body": "“{{title}}” will be deleted for good. This can’t be undone.",
+    "deleted": "Deleted.",
+    "errors": {
+      "load_failed": "Your quizzes couldn’t be loaded.",
+      "delete_failed": "That didn’t work. The quiz was not deleted."
+    }
   },
   "footer": {
     "self_ads": "Made with ❤️ by {{mawoka_link}} and with the help of {{others_link}}.",
@@ -679,5 +688,9 @@
     "sample_error": "That username is already taken.",
     "not_ported_title": "Not built yet",
     "not_ported_body": "This part of the app has not been migrated to the new frontend yet."
+  },
+  "media": {
+    "open_fullscreen": "Show full size",
+    "unavailable": "Image not available"
   }
 }

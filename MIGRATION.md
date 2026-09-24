@@ -47,7 +47,9 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 
 ## Phase 2: Core loop (create → host → play → results). The thesis-critical part
 
-- [ ] `/dashboard` (438)
+- [ ] `/dashboard` (438 + ~450 in components). **Split into two PRs:**
+  - [x] quiz list: search, cards with cover image, analytics, download, delete (`lib/components/DownloadQuiz.svelte`, `lib/editor/MediaComponent.svelte` → shared `components/MediaComponent.tsx`)
+  - [ ] start-game dialog (`lib/dashboard/start_game.svelte`). Decided: no player captcha (always sends `captcha_enabled=False`), no ClassQuizControllers toggle, `lib/hashcash.ts` deleted
 - [ ] `/create` (138)
 - [ ] `/edit` (176): quiz editor, `lib/editor/*`. **Largest piece. Split into several PRs:**
   - [ ] editor shell + sidebar + slide list (drag and drop)
@@ -94,6 +96,11 @@ Anything only a person with a real backend/device can confirm goes here, for one
 
 - [ ] `/account/login` (PR #10): real sign-in against `compose.dev.yml` with TOTP, with a backup code, and with a
   passkey (the passkey request body is only unit-tested with a mocked `startAuthentication`).
+- [ ] `/dashboard` (quiz list): download a quiz **with a cover or question images** in the own format (`.cqa`) on the
+  real server. In `compose.dev.yml` this returns 500 because the backend fetches the images from its own
+  `ROOT_ADDRESS` (`http://localhost:5173`, which is the api container itself there). Quizzes without images and the
+  Excel export were verified. Also check the cover thumbhash placeholder on a slow connection; locally the image
+  arrived before the placeholder could be seen.
 
 ## After parity (not now)
 
@@ -173,3 +180,14 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `account/login` (2FA) | The backup code must be exactly 64 characters, and the code is pasted from the downloaded `.txt`, so a trailing newline keeps Continue disabled with no hint why. | Surrounding whitespace is trimmed before the length check. The value sent is otherwise unchanged. |
 | `account/login` (2FA) | A successful backup-code sign-in rotates the code server-side (`os.urandom(32).hex()`), and nothing tells the user their saved code is now void. | **Replicated** (parity). Worth a post-sign-in notice pointing to `/account/settings/security` after parity. |
 | `locales` | `words.totp` reads "Totp" (de: "TOTP"), used only as the login code field's label. | Value changed to "One-time code" / "Einmalcode"; key kept. |
+| `dashboard` | Search is never re-run while typing: `search()` is called once in `onMount`, the input only `bind:value`s `search_term`, and nothing reacts to it. **Typing into the search box filters nothing.** | **Fixed** (intended behaviour): results update as you type. |
+| `dashboard` | Fuse indexes `questions.title`, but questions store their text in `question` (`QuizQuestion.question`), so question text was never searchable. | **Fixed**: the index uses the question text. |
+| `dashboard` | Delete uses a native `confirm()` and then `window.location.reload()` whether the request worked or not. | AlertDialog (as in ADR 0011); on success the list is refetched with a toast, on failure a toast says the quiz was not deleted and it stays listed. |
+| `dashboard` | Titles and descriptions are rendered with `{@html}`. | Rendered as plain text. The editor stores them as plain text; revisit at `/import`, where Kahoot titles could carry entities. |
+| `dashboard` | Quiztivities have no likes/views/plays, so their analytics modal prints `undefined` in every cell; their View button is always disabled because the model has no `public` flag. | Analytics shows "–" for missing counters; View stays disabled (parity). |
+| `dashboard` | `class:grid-cols-2={quiz.type !== 'quiztivity'}` is always true for quizzes, so they get both `grid-cols-3` and `grid-cols-2`. | Moot: the action grid is rebuilt (six columns on phones, 3×2 from `sm`). |
+| `dashboard` | `page_size=100`: a teacher with more than 100 quizzes silently sees only the 100 most recently updated. | **Replicated** (parity). Pagination is a feature, after parity. |
+| `dashboard` | The command-palette notice ("Press Ctrl+K…") advertises a command palette that `web/` does not have. | **Skipped** for now; revisit if the palette is ported. |
+| `dashboard` | The analytics modal ends with a hardcoded English "thank You for using ClassQuiz!" blurb. `<title>` is "ClassQuiz - Dashboard". | Both dropped (no-ClassQuiz-branding rule; no route in `web/` sets a title yet). |
+| `lib/editor/MediaComponent.svelte` | Decodes the `X-Thumbhash` and `X-Alt-Text` headers unconditionally; a file without them (anything outside the storage table) throws and never renders. It also downloads images as blobs just to build an object URL. | Missing headers mean no placeholder / no alt text. Images load through a plain same-origin `src`. |
+| `lib/components/DownloadQuiz.svelte` | The Excel file is named `ClassQuiz-<title>.xlsx` by the backend. | **Replicated**: the name is set server-side (`eximport.py`), which the rewrite phase does not touch. |
