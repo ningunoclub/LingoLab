@@ -32,7 +32,8 @@ grep -rL "Bruno Zingg" --include=*.py classquiz                                 
 | lucide-react | ISC | Icons |
 | i18next / react-i18next | MIT | Translations |
 | socket.io-client | MIT | Real-time |
-| Tiptap | MIT | Rich text (replaces CKEditor 5, which is GPL/commercial) |
+| Tiptap (`@tiptap/react`, `@tiptap/pm`, `@tiptap/core`, `@tiptap/extensions`, `@tiptap/extension-{document,text,bold,italic,strike,subscript,superscript,typography}`) | MIT | Rich text for the quiz title and question text, replacing CKEditor 5, which is GPL/commercial. Core extensions only, no Pro extensions (PR #19, ADR-0019) |
+| DOMPurify | MPL-2.0 OR Apache-2.0 | Sanitises stored quiz HTML before it is rendered (`components/RichText.tsx`); legacy depends on it too (PR #19, ADR-0019) |
 | Lexend, Atkinson Hyperlegible Next (via Fontsource) | OFL-1.1 | Fonts |
 | chrome-devtools-mcp | Apache-2.0 | Development tool only |
 | UI UX Pro Max skill | MIT | Development tool only (one-time) |

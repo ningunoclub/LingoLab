@@ -20,3 +20,4 @@
 | [0016](0016-phase-2-breakdown-and-media-scope.md) | Phase 2 breakdown into twelve PRs, and the media and scope choices it required | Accepted | 2026-09-30 |
 | [0017](0017-editor-state-without-react-hook-form.md) | Hold the quiz editor's state in plain React state with zod, not react-hook-form | Accepted | 2026-09-30 |
 | [0018](0018-uploader-file-checks-and-error-messages.md) | Check upload file types on the client and name each upload error | Proposed | 2026-11-05 |
+| [0019](0019-rich-text-field-and-rendering.md) | Rich text with Tiptap: a single-line field, a fixed toolbar, `<del>` for strikethrough and sanitised rendering | Proposed | 2026-11-05 |
