@@ -25,6 +25,7 @@ import { MediaUploader } from './media/MediaUploader';
 import { OrderAnswers } from './OrderAnswers';
 import { TYPE_NAME_KEYS } from './questionTypes';
 import { RangeAnswerEditor } from './RangeAnswerEditor';
+import { RichTextInput } from './RichTextInput';
 import { TextAnswers } from './TextAnswers';
 import type {
   AbcdAnswer,
@@ -104,14 +105,12 @@ export function QuestionCard({ question, number, issues, onChange }: Props) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor={`${id}-question`}>{t('words.question')}</Label>
-        <Input
-          id={`${id}-question`}
+        <RichTextInput
+          label={t('words.question')}
           value={question.question}
-          onChange={(event) => onChange({ question: event.target.value })}
-          aria-invalid={textIssue !== undefined}
-          aria-describedby={textIssue ? `${id}-question-error` : undefined}
-          className="h-11"
+          onChange={(text) => onChange({ question: text })}
+          invalid={textIssue !== undefined}
+          describedBy={textIssue ? `${id}-question-error` : undefined}
         />
         {textIssue ? (
           <p id={`${id}-question-error`} className="text-sm text-destructive">

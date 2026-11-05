@@ -351,6 +351,16 @@
       "slide_empty": "The slide mustn't be empty",
       "min_questions": "You need at least one question",
       "max_questions": "You can't have more than 50 questions"
+    },
+    "formatting": {
+      "toolbar": "Text formatting",
+      "bold": "Bold",
+      "italic": "Italic",
+      "strikethrough": "Strikethrough",
+      "superscript": "Superscript",
+      "subscript": "Subscript",
+      "undo": "Undo",
+      "redo": "Redo"
     }
   },
   "import_page": {

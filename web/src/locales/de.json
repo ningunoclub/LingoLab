@@ -356,6 +356,16 @@
       "slide_empty": "Die Folie darf nicht leer sein",
       "min_questions": "Du brauchst mindestens eine Frage",
       "max_questions": "Du kannst nicht mehr als 50 Fragen haben"
+    },
+    "formatting": {
+      "toolbar": "Textformatierung",
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "strikethrough": "Durchgestrichen",
+      "superscript": "Hochgestellt",
+      "subscript": "Tiefgestellt",
+      "undo": "Rückgängig",
+      "redo": "Wiederholen"
     }
   },
   "import": {
