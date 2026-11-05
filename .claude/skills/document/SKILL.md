@@ -48,4 +48,10 @@ If a new third-party dependency, asset or copied code was added, also update `do
 ## Finish
 
 1. Show Bruno a short summary of the files you created or changed.
-2. Ask whether to commit. On yes: `git add docs/thesis && git commit -m "docs(thesis): <summary>"`.
+2. Ask whether to commit. On yes, docs go in their own branch and PR, never in a code commit:
+   - Branch `docs/thesis-<short-name>` from `main`, not from the feature branch. If the working tree has
+     uncommitted work that isn't yours, don't switch, stash or touch it: `git worktree add -b docs/thesis-<short-name>
+     .claude/tmp/wt-docs main`, copy the doc files in, and work there.
+   - `git add docs/thesis && git commit -m "docs(thesis): <summary>"` (only `docs/thesis/`).
+   - Push and `gh pr create` with a short body that lists the files and the code PR(s) they describe.
+   - Remove the worktree afterwards if you used one.
