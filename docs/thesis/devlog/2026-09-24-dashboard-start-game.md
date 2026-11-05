@@ -2,7 +2,7 @@
 
 - **Phase / area:** Phase 2: Core loop
 - **Related:** PR #12 (squash-merged as `01e01da`; branch commits `7815063` hashcash deletion, `87835ef` dialog); PR #11 (squash-merged as `7cb6184`); `MIGRATION.md` items `/dashboard` and its sub-item "start-game dialog"; ADR-0011; ADR-0015; devlog [part 1](2026-09-24-dashboard-quiz-list.md)
-- **Time spent (approx.):** TODO(Bruno)
+- **Time spent (approx.):** Not tracked per session. About 15 hours of coding in total from the workspace setup to PR #14 (Bruno's estimate, 2026-11-05).
 
 ## Goal
 

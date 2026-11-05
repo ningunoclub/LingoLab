@@ -2,7 +2,7 @@
 
 - **Phase / area:** Phase 1: Accounts (last open item)
 - **Related:** PR #10 (squash-merged as `f447056`); `MIGRATION.md` Phase 1 item "Login second-factor branches"; ADR-0015 (when to fix a legacy bug)
-- **Time spent (approx.):** TODO(Bruno)
+- **Time spent (approx.):** Not tracked per session. About 15 hours of coding in total from the workspace setup to PR #14 (Bruno's estimate, 2026-11-05).
 
 ## Goal
 

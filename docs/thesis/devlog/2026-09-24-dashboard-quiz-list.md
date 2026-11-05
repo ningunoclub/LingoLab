@@ -2,7 +2,7 @@
 
 - **Phase / area:** Phase 2: Core loop (first route)
 - **Related:** PR #11 (squash-merged as `7cb6184`; branch commits `a8c52f8` placeholder routes and `e32930b` quiz list); continued in [part 2](2026-09-24-dashboard-start-game.md); `MIGRATION.md` item `/dashboard`, sub-item "quiz list"; ADR-0011 (replace native browser modals); ADR-0015 (when to fix a legacy bug)
-- **Time spent (approx.):** TODO(Bruno)
+- **Time spent (approx.):** Not tracked per session. About 15 hours of coding in total from the workspace setup to PR #14 (Bruno's estimate, 2026-11-05).
 
 ## Goal
 

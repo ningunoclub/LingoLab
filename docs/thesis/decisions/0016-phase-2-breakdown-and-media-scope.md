@@ -91,7 +91,9 @@ Bruno accepted the twelve-PR breakdown and decided:
 - **Pixabay:** dropped.
 - **SLIDE type:** Bruno asked for the licence check rather than stating a choice. After the check
   passed, Claude recorded the type as ported (PR 5) and told Bruno it had read his answer that way.
-  TODO(Bruno): confirm that SLIDE is to be ported, or move it to the Phase 4 cut list.
+  Bruno confirmed on 2026-11-05 that SLIDE is to be ported, in its planned place as PR 5, after
+  weighing it against moving it to the Phase 4 cut list (slides are useful in EFL lessons for
+  introducing vocabulary or instructions between questions).
 - **Video tab:** left out for now; to be revisited with the `/edit/videos` decision.
 - **Captcha games:** no captcha script is loaded; a game that reports captcha as enabled shows a
   "this game can't be joined here" message.
