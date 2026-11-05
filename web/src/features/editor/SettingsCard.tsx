@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { DEFAULT_BACKGROUND_COLOR } from './editorData';
 import type { EditorIssue } from './editorSchema';
+import { MediaUploader } from './media/MediaUploader';
 import type { EditorState } from './types';
 
 type Settings = Omit<EditorState, 'questions'>;
@@ -22,10 +23,7 @@ type Props = {
   onChange: (patch: Partial<Settings>) => void;
 };
 
-/**
- * Port of legacy `lib/editor/settings-card.svelte`: the quiz's own fields. Cover and
- * background images can be removed here but not added until the uploader is ported.
- */
+/** Port of legacy `lib/editor/settings-card.svelte`: the quiz's own fields. */
 export function SettingsCard({ settings, issues, onChange }: Props) {
   const { t } = useTranslation();
   const id = useId();
@@ -86,7 +84,12 @@ export function SettingsCard({ settings, issues, onChange }: Props) {
             {t('editor.remove_image')}
           </Button>
         </div>
-      ) : null}
+      ) : (
+        <MediaUploader
+          fieldLabel={t('editor.cover_image')}
+          onSelect={(image) => onChange({ cover_image: image })}
+        />
+      )}
 
       <div className="flex items-center justify-between gap-4">
         <Label htmlFor={`${id}-public`}>
@@ -147,7 +150,15 @@ export function SettingsCard({ settings, issues, onChange }: Props) {
             {t('editor.remove_image')}
           </Button>
         </div>
-      ) : null}
+      ) : (
+        <div className="flex flex-col items-start gap-2">
+          <h3 className="text-sm font-medium">{t('editor.bg_image')}</h3>
+          <MediaUploader
+            fieldLabel={t('editor.bg_image')}
+            onSelect={(image) => onChange({ background_image: image })}
+          />
+        </div>
+      )}
     </section>
   );
 }
