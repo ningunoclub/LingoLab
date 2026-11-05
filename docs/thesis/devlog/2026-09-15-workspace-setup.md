@@ -2,7 +2,7 @@
 
 - **Phase / area:** Setup (before Phase 0 of `MIGRATION.md`)
 - **Related:** ADR-0001 to ADR-0009; initial kit commit (TODO(Bruno): add hash)
-- **Time spent (approx.):** TODO(Bruno)
+- **Time spent (approx.):** Not tracked per session. About 15 hours of coding in total from the workspace setup to PR #14 (Bruno's estimate, 2026-11-05).
 
 ## Goal
 Change the technical approach of the thesis platform (self-hosted instead of Vercel/Supabase), decide whether to build

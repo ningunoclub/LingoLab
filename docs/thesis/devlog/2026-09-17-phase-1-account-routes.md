@@ -2,7 +2,7 @@
 
 - **Phase / area:** Phase 1: Accounts
 - **Related:** PRs #2, #3, #5, #6, #7, #9 (and the closed #8); commits `dac801e`, `9625162`, `befcec9`, `1ab4457`, `efc779c`, `51de62f`; ADR-0011 … ADR-0015; `MIGRATION.md` Phase 1
-- **Time spent (approx.):** TODO(Bruno)
+- **Time spent (approx.):** Not tracked per session. About 15 hours of coding in total from the workspace setup to PR #14 (Bruno's estimate, 2026-11-05).
 
 ## Goal
 
