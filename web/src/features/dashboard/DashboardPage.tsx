@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
+import { richTextToPlain } from '@/lib/richText';
 import { AnalyticsDialog } from './AnalyticsDialog';
 import { DashboardItemCard } from './DashboardItemCard';
 import { DownloadQuizDialog } from './DownloadQuizDialog';
@@ -183,7 +184,7 @@ export function DashboardPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dashboard.delete_title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('dashboard.delete_body', { title: pendingDelete?.title ?? '' })}
+              {t('dashboard.delete_body', { title: richTextToPlain(pendingDelete?.title ?? '') })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

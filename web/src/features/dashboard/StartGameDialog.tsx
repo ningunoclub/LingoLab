@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { Loader2 } from 'lucide-react';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RichText } from '@/components/RichText';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -161,7 +162,9 @@ export function StartGameDialog({
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display">{t('start_game.start_game')}</DialogTitle>
-          <DialogDescription>{quiz?.title}</DialogDescription>
+          <DialogDescription>
+            <RichText html={quiz?.title ?? ''} />
+          </DialogDescription>
         </DialogHeader>
         {quiz ? <StartGameForm quiz={quiz} /> : null}
       </DialogContent>

@@ -89,7 +89,13 @@ test('creates a multiple-choice quiz and saves it', async ({ page }) => {
   await expect(save).toBeDisabled();
   await expect(status(page)).toHaveText('A title is required');
 
-  await page.getByLabel('Title').fill('Weather words');
+  // The title is a rich-text field: type, then switch bold on from the toolbar and type on.
+  const title = page.getByRole('textbox', { name: 'Title' });
+  await title.click();
+  await page.keyboard.type('Weather ');
+  await page.getByRole('button', { name: 'Bold' }).click();
+  await page.keyboard.type('words');
+  await expect(page.getByRole('button', { name: 'Bold' })).toHaveAttribute('aria-pressed', 'true');
   await page.getByLabel('Description').fill('Vocabulary for unit 3');
   await expect(status(page)).toHaveText('You need at least one question');
 
@@ -105,6 +111,8 @@ test('creates a multiple-choice quiz and saves it', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Answer 2', exact: true }).fill('Sand');
 
   await expect(status(page)).toHaveText('Weather words');
+  // The status bar and the sidebar show the formatting, not the tags.
+  await expect(status(page).locator('strong')).toHaveText('words');
   await save.click();
 
   await expect(page).toHaveURL(/\/dashboard$/);
@@ -112,7 +120,7 @@ test('creates a multiple-choice quiz and saves it', async ({ page }) => {
   expect(backend.saved).toHaveLength(1);
   expect(backend.saved[0]?.editId).toBe('abcd1234');
   expect(backend.saved[0]?.body).toMatchObject({
-    title: 'Weather words',
+    title: 'Weather <strong>words</strong>',
     description: 'Vocabulary for unit 3',
     public: false,
     questions: [
@@ -215,13 +223,13 @@ test('builds one question of every other type and saves them', async ({ page }) 
 test('keeps an unsaved new quiz as a draft', async ({ page, context }) => {
   await mockEditor(page);
   await page.goto('/create?title=Unit%204');
-  await expect(page.getByLabel('Title')).toHaveValue('Unit 4');
+  await expect(page.getByLabel('Title')).toHaveText('Unit 4');
   await page.getByLabel('Description').fill('Half-finished');
 
   const second = await context.newPage();
   await mockEditor(second);
   await second.goto('/create');
-  await expect(second.getByLabel('Title')).toHaveValue('Unit 4');
+  await expect(second.getByLabel('Title')).toHaveText('Unit 4');
   await expect(second.getByLabel('Description')).toHaveValue('Half-finished');
 });
 
@@ -245,7 +253,7 @@ test('edits, reorders and saves an existing quiz', async ({ page }) => {
   const backend = await mockEditor(page);
   await page.goto(`/edit?quiz_id=${QUIZ_ID}`);
 
-  await expect(page.getByLabel('Title')).toHaveValue('Irregular verbs');
+  await expect(page.getByLabel('Title')).toHaveText('Irregular verbs');
   await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled();
 
   const sidebar = page.getByRole('navigation', { name: 'Questions' });
@@ -309,7 +317,7 @@ test('a failed save keeps the editor open', async ({ page }) => {
 
   await expect(page.getByText("The quiz couldn't be saved.")).toBeVisible();
   await expect(page).toHaveURL(/\/edit\?quiz_id=/);
-  await expect(page.getByLabel('Title')).toHaveValue('Irregular verbs 2');
+  await expect(page.getByLabel('Title')).toHaveText('Irregular verbs 2');
 });
 
 test('reports a quiz that does not exist', async ({ page }) => {
@@ -374,7 +382,7 @@ test('adds a cover by upload and a question image from the library', async ({ pa
   const backend = await mockEditor(page);
   const storage = await mockStorage(page);
   await page.goto(`/edit?quiz_id=${QUIZ_ID}`);
-  await expect(page.getByLabel('Title')).toHaveValue('Irregular verbs');
+  await expect(page.getByLabel('Title')).toHaveText('Irregular verbs');
 
   // Cover: upload a new image.
   await page.getByRole('button', { name: 'Add Media: Cover image' }).click();
