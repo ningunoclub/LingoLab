@@ -60,7 +60,8 @@ Work top to bottom. Each phase should be usable end to end before starting the n
   - [x] **PR 2** remaining question types: CHECK, TEXT, ORDER, RANGE, VOTING. One answer part per legacy
     `*EditorPart.svelte`; CHECK shares the ABCD part, as in legacy. RANGE uses the shadcn Slider
     (`svelte-range-slider-pips` → Slider). Only SLIDE still shows the "not editable yet" note.
-  - [ ] **PR 3** media upload (`uploader`, `uploader/Library`): cover, background and question images
+  - [x] **PR 3** media upload (`uploader`, `uploader/Library`): cover, background and question images. Custom
+    dropzone (`features/editor/media/`), no crop or compression, no Pixabay or video tab (Phase 2 decisions)
   - [ ] **PR 4** rich text (CKEditor → Tiptap) for the quiz title and the question text (legacy's description is a
     plain textarea)
   - [ ] **PR 5** SLIDE type (`slide.svelte`, `slides/*`, ~650): canvas editor + read-only renderer (`play/admin/slide.svelte`)
@@ -255,4 +256,6 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `lib/editor/OrderEditorPart.svelte` | Adds a client-side `id` to every answer for its list animation (`[i]`, an array, for stored answers and a number for new ones) and sends it along; the backend model drops it. Resetting a colour (right-click) stores `null`, which the next render replaces by the default. | No `id` is stored or sent. Reset is a button and stores the default colour directly. |
 | `lib/editor/VotingEditorPart.svelte`, `OrderEditorPart.svelte` | Default colours are the legacy brown/green set, as in the ABCD part; resetting a colour is right-click only. `VotingEditorPart` empties the answers when the first one has a boolean `right` (a leftover guard for switching types, which the editor cannot do). | The design system's answer colours 1-4, a reset button. The guard is not carried over. |
 | `lib/editor/sidebar.svelte` | The RANGE summary ("All numbers between … are correct, where …") is hardcoded English. | `editor.range.summary` (en + de), shown in the sidebar and under the slider (legacy's slider labelled its pips instead). |
+| `lib/editor/uploader.svelte` | Uppy's `DropTarget` is attached to `document.body` while any uploader is mounted, so a file dropped anywhere on the editor is queued silently even with the dialog closed. The client accepts `image/*`, but the backend only stores png/jpeg/gif/webp, so SVG, HEIC etc. pass the check and then fail with 422. Backend errors (409 storage full, 422) only show as Uppy's generic failure. | Dropping only works on the dropzone in the dialog. The picker accepts the four stored image types and explains any other type before uploading. 409, 413 and 422 each get their own message (`uploader.*`, en + de). |
+| `lib/editor/uploader/Library.svelte` | Every item is drawn as `<img>`, so an mp4 shows as a broken image. "No name available" is hardcoded English. The backend's `POST /storage/` never stores a file name, so every upload from the editor shows that fallback. | Videos show as a muted `<video>` preview and stay selectable. `uploader.no_name` (en + de). The missing file name is backend behaviour and is left as is. |
 | `locales/en.json` | `editor.hide_question_results` reads "Hide question resuluts?". | Typo fixed; key kept. |
