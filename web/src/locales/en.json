@@ -410,7 +410,17 @@
     "answers_submitted": "{{answer_count}} Answers submitted",
     "request_export_results": "Request result download",
     "download_export_results": "Download results",
-    "export_results": "Export results"
+    "export_results": "Export results",
+    "lobby": {
+      "connecting": "Connecting to the game…",
+      "no_game_title": "No game to host",
+      "no_game_body": "Start a game from your dashboard to open the host screen.",
+      "invalid_game": "The game could not be loaded. Start it again from your dashboard.",
+      "show_qr": "Show the QR code full screen",
+      "qr_alt": "QR code to join the game",
+      "kick_player": "Remove {{username}} from the game",
+      "kick_hint": "Click a name to remove the player."
+    }
   },
   "password_reset_page": {
     "reset_password": "Reset password",

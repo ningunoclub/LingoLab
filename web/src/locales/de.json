@@ -410,7 +410,17 @@
     "stop_time_and_solutions": "Zeit stoppen und Ergebnisse zeigen",
     "answers_submitted": "{{answer_count}} Antworten abgegeben",
     "request_export_results": "Frage den Ergebnis-Download an",
-    "download_export_results": "Ergebnisse herunterladen"
+    "download_export_results": "Ergebnisse herunterladen",
+    "lobby": {
+      "connecting": "Verbindung zum Spiel wird aufgebaut…",
+      "no_game_title": "Kein Spiel zum Leiten",
+      "no_game_body": "Starte ein Spiel in deinem Dashboard, um die Spielleitung zu öffnen.",
+      "invalid_game": "Das Spiel konnte nicht geladen werden. Starte es im Dashboard neu.",
+      "show_qr": "QR-Code im Vollbild zeigen",
+      "qr_alt": "QR-Code zum Beitreten",
+      "kick_player": "{{username}} aus dem Spiel entfernen",
+      "kick_hint": "Klicke auf einen Namen, um die Person zu entfernen."
+    }
   },
   "import_page": {
     "need_help": "Brauchst du Hilfe?",

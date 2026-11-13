@@ -70,7 +70,11 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     own "Slide" button, as in legacy. **Scope change (Bruno, 2026-11-13): image elements**, picked through the PR 3
     uploader; legacy had the Image element commented out. Unused legacy `slides/types/*.svelte` not ported (dead code)
 - [ ] `/admin` (340) and `/play` (220): live game, `lib/play/*` (~2,000) + `lib/admin.svelte`. **Split into four PRs:**
-  - [ ] **PR 6** host lobby: `/admin` connect, PIN, QR code, player list, kick, start (`admin/game_not_started`)
+  - [x] **PR 6** host lobby: `/admin` connect, PIN, QR code, player list, kick, start (`admin/game_not_started`).
+    `features/host/`: live state in a Zustand store (`hostStore.ts`, PR 8 adds the question loop), socket wiring in
+    `useHostGame.ts`. QR code still drawn by the backend (`/api/v1/utils/qr/{pin}`), so no `qrcode.react`. Unused
+    `check_captcha`/`game_mode` fetch and the ClassQuizControllers code are not ported. After "Start" a placeholder
+    shows until PR 8
   - [x] **PR 7** player join: `/play` PIN check, username, custom field, rejoin, kicked, title screen (`join`, `title`).
     `features/play/`: Zustand store (`playStore.ts`, PR 9 adds questions and results), socket wiring in
     `usePlayerGame.ts`. The two js-cookie cookies (`joined_game`, `kicked`) are written with `document.cookie`. Captcha
@@ -285,6 +289,11 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `lib/editor/slides/*` | Deleting an element needs Delete/Backspace and editing a text needs a double-click, so neither works on a touch screen or is discoverable. The edit menu's icons have no labels. A new element is added to the current selection, so after adding two in a row both are selected. The settings menu repeats title and time. Default fill `#ff000d`, placeholder words "Headline"/"Text" in English. | "Delete element" and "Edit text" buttons; every tool has a label and tooltip (`editor.slide.*`). A new element is selected alone. Title and time are the card's normal fields. Default fill is answer colour 1; placeholders are translated. |
 | `lib/play/admin/slide.svelte` | The rendered picture's alt text is "Slide image" for every slide. The picture is exported at screen resolution. | Alt text is the slide's words, top to bottom (`words.slide` when it has none). Exported at 2× for projectors. |
 | stored slides (pikaso 2.9) | Legacy's pikaso exports the label added last with `zIndex: 0`, so after reopening it lies under the other elements (legacy's own renderer shows it the same way). | Left as is: it is stored data, and pikaso 3 exports correct indexes for new edits. |
+| `admin` | Without `connect`, `token` or `pin` in the URL the page renders nothing at all. | A short "No game to host" notice with a link to the dashboard. |
+| `admin` | The quiz background image is used as `url('<storage id>')`, a relative URL that never loads. | Loaded through `/api/v1/storage/download/<id>`, as the editor shows it. |
+| `admin` | Players are `<span onclick>` (kick by click), not keyboard operable. | Real buttons labelled "Remove <name> from the game". Kicking still needs no confirmation, as in legacy. |
+| `admin` | A kicked player's name stays reserved in Redis (`game_session:<pin>:players:<name>`), so it can't rejoin under that name. | Backend behaviour, unchanged. |
+| `admin` | Reloading the host screen loses the host role: the backend answers `already_registered_as_admin`. | Kept (backend). The leave warning (`beforeunload`) stays on while connected, as in legacy. |
 | `play` | `window.alert` for a wrong PIN, a taken name and a kick. A game that has already started and a browser that was kicked in the last day get no message at all (the kicked one only a console banner). | Inline messages on the join card (`play_page.join.*`, en + de), A2–B1 wording. |
 | `play` | The PIN form's Submit button submits the form natively (no handler), reloading `/play` and losing the PIN; the check only ever ran by itself at six digits. | The check still starts at six digits; the button no longer reloads the page. |
 | `play` | The kick handler keeps the `joined_game` cookie and reloads; the backend does not forget the seat, so the reload rejoins the kicked player straight into the game. | The kick deletes the rejoin cookie, so the player stays out (and the one-day `kicked` block applies as intended). |
