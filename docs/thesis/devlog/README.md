@@ -12,3 +12,4 @@
 | 2026-11-05 | [Media upload in the quiz editor](2026-11-05-editor-media-upload.md) | Phase 2: Core loop |
 | 2026-11-05 | [Rich text in the quiz editor with Tiptap](2026-11-05-editor-rich-text.md) | Phase 2: Core loop |
 | 2026-11-13 | [The SLIDE question type and a shared slide renderer](2026-11-13-editor-slide.md) | Phase 2: Core loop |
+| 2026-11-13 | [The host lobby (`/admin` before the game starts)](2026-11-13-host-lobby.md) | Phase 2: Core loop |
