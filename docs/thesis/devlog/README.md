@@ -9,3 +9,4 @@
 | 2026-09-24 | [/dashboard, part 2: the start-game dialog](2026-09-24-dashboard-start-game.md) | Phase 2: Core loop |
 | 2026-09-30 | [The quiz editor shell with ABCD questions: review and merge](2026-09-30-editor-shell-abcd.md) | Phase 2: Core loop |
 | 2026-09-30 | [The remaining question types in the quiz editor](2026-09-30-editor-question-types.md) | Phase 2: Core loop |
+| 2026-11-05 | [Media upload in the quiz editor](2026-11-05-editor-media-upload.md) | Phase 2: Core loop |
