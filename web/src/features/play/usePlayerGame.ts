@@ -19,9 +19,14 @@ import { usePlayStore } from './playStore';
 
 export type JoinRequest = { gamePin: string; username: string; customField: string | null };
 
+/** What a player sends for one question: `answer`, plus the whole list for ORDER. */
+export type AnswerRequest = { answer: string; complexAnswer?: { answer: string }[] };
+
 export type PlayerGameControls = {
   /** Emits `join_game`. Returns false when this browser was kicked in the last day. */
   join: (request: JoinRequest) => boolean;
+  /** Emits `submit_answer` for the current question, once per question. */
+  submitAnswer: (request: AnswerRequest) => void;
 };
 
 /**
@@ -100,15 +105,41 @@ export function usePlayerGame(): PlayerGameControls {
   );
   useSocketEvent(
     'set_question_number',
-    useCallback((data) => usePlayStore.getState().questionShown(data.question_index), []),
+    useCallback(
+      (data) => usePlayStore.getState().questionShown(data.question_index, data.question),
+      [],
+    ),
+  );
+  useSocketEvent(
+    'everyone_answered',
+    useCallback(() => usePlayStore.getState().timeUp(), []),
+  );
+  // Players only learn from `solutions` that the time is over; the solution itself is not shown.
+  useSocketEvent(
+    'solutions',
+    useCallback(() => usePlayStore.getState().timeUp(), []),
+  );
+  useSocketEvent(
+    'question_results',
+    useCallback((data) => usePlayStore.getState().resultsReceived(data), []),
   );
   useSocketEvent(
     'final_results',
-    useCallback(() => {
+    useCallback((data) => {
       clearJoinedGame();
-      usePlayStore.getState().gameFinished();
+      usePlayStore.getState().gameFinished(data);
     }, []),
   );
+
+  // The countdown runs on the phone, one tick per second, as in legacy.
+  const questionIndex = usePlayStore((s) => s.questionIndex);
+  const running = usePlayStore((s) => s.timeLeft > 0);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: questionIndex restarts the interval on a new question.
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => usePlayStore.getState().tick(), 1000);
+    return () => clearInterval(id);
+  }, [running, questionIndex]);
 
   // On every (re)connect, take back a saved seat. This covers both a reload and socket.io's
   // own reconnect after the phone lost its connection.
@@ -151,6 +182,16 @@ export function usePlayerGame(): PlayerGameControls {
           custom_field: customField ?? undefined,
         });
         return true;
+      },
+      submitAnswer: ({ answer, complexAnswer }) => {
+        const { questionIndex, answered, answerSent } = usePlayStore.getState();
+        if (questionIndex === null || answered) return;
+        answerSent();
+        getSocket().emit('submit_answer', {
+          question_index: questionIndex,
+          answer,
+          ...(complexAnswer ? { complex_answer: complexAnswer } : {}),
+        });
       },
     }),
     [],
