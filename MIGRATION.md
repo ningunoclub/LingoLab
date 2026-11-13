@@ -69,7 +69,7 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     konva) + read-only renderer `components/SlideRenderer.tsx` for PRs 8 and 11. Slides are added with the sidebar's
     own "Slide" button, as in legacy. **Scope change (Bruno, 2026-11-13): image elements**, picked through the PR 3
     uploader; legacy had the Image element commented out. Unused legacy `slides/types/*.svelte` not ported (dead code)
-- [ ] `/admin` (340) and `/play` (220): live game, `lib/play/*` (~2,000) + `lib/admin.svelte`. **Split into four PRs:**
+- [x] `/admin` (340) and `/play` (220): live game, `lib/play/*` (~2,000) + `lib/admin.svelte`. **Split into four PRs:**
   - [x] **PR 6** host lobby: `/admin` connect, PIN, QR code, player list, kick, start (`admin/game_not_started`).
     `features/host/`: live state in a Zustand store (`hostStore.ts`, PR 8 adds the question loop), socket wiring in
     `useHostGame.ts`. QR code still drawn by the backend (`/api/v1/utils/qr/{pin}`), so no `qrcode.react`. Unused
@@ -85,7 +85,12 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     `nextHostAction`) that both the control button and Enter/Space use. Shared new pieces: `components/CountdownRing`
     and `components/FinalRanking` (PR 9 adds the player's own score to it). `canvas-confetti` 1.9.4 (ISC) added;
     no confetti with reduced motion. Legacy's row-reorder animation on the scoreboard is not reproduced
-  - [ ] **PR 9** player question loop: answer screens for all types, solutions, per-question results, end screen
+  - [x] **PR 9** player question loop: answer screens for all types, per-question results, end screen
+    (`question`, `questions/check`, `results_kahoot`, end half of `final_results`). Question parsing in
+    `features/play/playerQuestion.ts`, loop state added to `playStore.ts`. `solutions` only stops the timer (legacy shows
+    no solution on the phone). Kahoot mode shows the shape only on the tiles, as legacy showed its icons. RANGE uses the
+    shadcn Slider; ORDER keeps legacy's up/down buttons. The end screen ranks by the server's `final_results` (see Legacy
+    quirks). `FinalRanking` takes an optional `username` for the player's own score and place
 - [ ] **PR 10** `/results` (85) and `/results/[result_id]` (~480 with its child components)
 - [ ] **PR 11** `/view/[quiz_id]` (343 + `lib/view_quiz/*`): rating; reuses the start-game and download dialogs and the SLIDE renderer
 - [ ] **PR 12** `/edit/files` (185) and `/dashboard/files` (49): needs the uploader from PR 3
@@ -152,6 +157,9 @@ Anything only a person with a real backend/device can confirm goes here, for one
 - [ ] `/create` and `/edit` (Phase 2 PR 5): drag, resize and rotate slide elements **with a mouse and with a finger**,
   double-click a text and edit it in place, upload a large photo as a slide image (e2e uses a 1×1 PNG and the keyboard).
   Host a quiz with a slide in the legacy app after saving it here.
+- [ ] `/play` (Phase 2 PR 9): play a full game on a real phone against the real backend with the new host screen: one
+  question of each type in normal and kahoot mode, a reload mid-question (rejoin), drag the RANGE slider with a finger,
+  and let a RANGE question time out unanswered (auto-submit). e2e fakes the socket server.
 - [ ] `/create` and `/edit` (Phase 2 PR 2): drag the two thumbs of a RANGE question's slider **with a mouse and with a
   finger** (e2e only uses the keyboard). Play one question of each type in the legacy app after saving it here; the
   backend round-trip was checked, the play screens were not.
@@ -197,6 +205,14 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `account/oauth-error` | Both messages are phrased as questions at the user ("Are you sure you've got an email? Is the Email verified?") and the generic branch doesn't say what to do next. | Reworded: each branch names the one thing the user can act on, and says the account is unchanged so retrying is safe. |
 | `account/oauth-error` | Tells users to open an issue on the **upstream author's** GitHub tracker. | **Dropped.** Third-party, and wrong for a self-hosted instance whose users have a local admin. Replaced with "contact the person who runs this LingoLab server". A unit test pins that the page links nowhere external. |
 | `account/oauth-error` | `?error` is compared only against `'email'`; any other value silently falls through to the generic text. | Kept, and made explicit: the route maps anything that is not `email` to `generic`, so an unexpected `?error` can never blank the page. |
+| `play/question.svelte` | Once the time is over the phone shows an empty screen (or only the question title) until the results come. | A "Time is up. Look at the board." panel fills the gap (new `play_page.loop.*` keys). No change to what the player can do. |
+| `play/questions/check.svelte` | Switching every CHECK tile off again leaves `selected_answer = ''`, so Submit is enabled and sends an empty answer; the tiles also stay clickable after submitting. | Submit needs at least one tile; tiles lock after submitting, like ABCD. |
+| `play/question.svelte` | `class:mt-10={[RANGE, ORDER, TEXT]}` passes an array, which is always truthy, so the margin applies to every type. | Layout detail, not reproduced. |
+| `play/question.svelte` | "Enter your answer" is hardcoded English; `results_kahoot.svelte` hardcodes "Total score:". | New `play_page.loop.enter_answer`; the total uses the existing `play_page.your_score`. |
+| `routes/play/+page.svelte` | The end screen ranks by the points this phone added up from the results it saw (`scores`), not by `final_results`. A player who rejoined mid-game, or whose phone missed a results screen, saw a different ranking from the projector. | **Fixed:** the end screen uses the server's `final_results` totals, as the host does. The per-question running total still adds up locally, as legacy did. |
+| `play/admin/final_results.svelte` | The player's "your score / your place" box is hidden when the score is 0 (`{#if data[username]}`). | Shown for every player in the ranking, 0 points included. |
+| backend `set_question_number` | TEXT questions are sent to players with their accepted answers (coerced into `ABCDQuizAnswerWithoutSolution`), so the solution is in every phone's socket traffic. | Backend left untouched (rewrite phase). The new player screen never reads those answers; a unit test pins that. Worth fixing in the backend after parity. |
+| backend `get_question_results` | Broadcasts the results to the whole game room, so players see a results screen even for questions the host set to "hide results". | Replicated. |
 | `account/settings` | `getUser()` returns `undefined` on a non-200 and calls `window.location.assign`, so the `{#await}` block renders with an undefined user before the redirect happens. | Replaced by the route's `beforeLoad` auth guard, so an unauthenticated visitor never renders the page at all. |
 | `account/settings` | `get_api_keys()` logs the full API-key list to the console on every load. | **Dropped.** API keys are credentials and the privacy rules forbid logging. |
 | `account/settings` | API keys are rendered in full, permanently. Teachers regularly mirror their screen onto a projector. | Keys are masked (`abcd••••••••5678`) with an explicit reveal and a copy button. The full key is never in the DOM until asked for. |

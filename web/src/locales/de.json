@@ -556,6 +556,12 @@
       "username_hint": "Mindestens {{min}} Zeichen",
       "captcha_game": "Diesem Spiel kannst du hier nicht beitreten. Bitte deine Lehrperson, das Spiel neu zu starten.",
       "other_pin": "Andere PIN eingeben"
+    },
+    "loop": {
+      "time_up": "Die Zeit ist um. Schau an die Tafel.",
+      "answer_sent": "Deine Antwort ist da. Warte auf die anderen.",
+      "enter_answer": "Gib deine Antwort ein",
+      "your_number": "Deine Zahl"
     }
   },
   "editor_page": {
