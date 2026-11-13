@@ -71,7 +71,11 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     uploader; legacy had the Image element commented out. Unused legacy `slides/types/*.svelte` not ported (dead code)
 - [ ] `/admin` (340) and `/play` (220): live game, `lib/play/*` (~2,000) + `lib/admin.svelte`. **Split into four PRs:**
   - [ ] **PR 6** host lobby: `/admin` connect, PIN, QR code, player list, kick, start (`admin/game_not_started`)
-  - [ ] **PR 7** player join: `/play` PIN check, username, custom field, rejoin, kicked, title screen (`join`, `title`)
+  - [x] **PR 7** player join: `/play` PIN check, username, custom field, rejoin, kicked, title screen (`join`, `title`).
+    `features/play/`: Zustand store (`playStore.ts`, PR 9 adds questions and results), socket wiring in
+    `usePlayerGame.ts`. The two js-cookie cookies (`joined_game`, `kicked`) are written with `document.cookie`. Captcha
+    games show a notice; no captcha script is loaded. Plausible event and Sentry dropped. After the first question a
+    placeholder shows until PR 9
   - [ ] **PR 8** host question loop: controls, timer, question/results/voting screens, Enter/Space shortcuts, final
     results, export, save results
   - [ ] **PR 9** player question loop: answer screens for all types, solutions, per-question results, end screen
@@ -281,3 +285,9 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `lib/editor/slides/*` | Deleting an element needs Delete/Backspace and editing a text needs a double-click, so neither works on a touch screen or is discoverable. The edit menu's icons have no labels. A new element is added to the current selection, so after adding two in a row both are selected. The settings menu repeats title and time. Default fill `#ff000d`, placeholder words "Headline"/"Text" in English. | "Delete element" and "Edit text" buttons; every tool has a label and tooltip (`editor.slide.*`). A new element is selected alone. Title and time are the card's normal fields. Default fill is answer colour 1; placeholders are translated. |
 | `lib/play/admin/slide.svelte` | The rendered picture's alt text is "Slide image" for every slide. The picture is exported at screen resolution. | Alt text is the slide's words, top to bottom (`words.slide` when it has none). Exported at 2× for projectors. |
 | stored slides (pikaso 2.9) | Legacy's pikaso exports the label added last with `zIndex: 0`, so after reopening it lies under the other elements (legacy's own renderer shows it the same way). | Left as is: it is stored data, and pikaso 3 exports correct indexes for new edits. |
+| `play` | `window.alert` for a wrong PIN, a taken name and a kick. A game that has already started and a browser that was kicked in the last day get no message at all (the kicked one only a console banner). | Inline messages on the join card (`play_page.join.*`, en + de), A2–B1 wording. |
+| `play` | The PIN form's Submit button submits the form natively (no handler), reloading `/play` and losing the PIN; the check only ever ran by itself at six digits. | The check still starts at six digits; the button no longer reloads the page. |
+| `play` | The kick handler keeps the `joined_game` cookie and reloads; the backend does not forget the seat, so the reload rejoins the kicked player straight into the game. | The kick deletes the rejoin cookie, so the player stays out (and the one-day `kicked` block applies as intended). |
+| `play` | The rejoin cookie keeps the connection id of the first join. After one rejoin the backend knows a new id, so a second reload or dropped connection can no longer rejoin. The cookie lives 3,600 days. | The cookie is updated after each rejoin and lives two hours, like the seat in Redis (`ex=7200`). |
+| `play` | On reconnect, `game_mode` is fetched for the PIN in the URL, which is usually empty after a reload (request to `check_captcha/`). | Fetched for the saved game's PIN. |
+| `play` | The "leave this page?" warning is on from the first screen, where nothing can be lost; a kick turns it off for good. | Warns only while in a game (from joining until the final results). |
