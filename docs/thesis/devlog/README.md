@@ -15,3 +15,5 @@
 | 2026-11-13 | [The host lobby (`/admin` before the game starts)](2026-11-13-host-lobby.md) | Phase 2: Core loop |
 | 2026-11-13 | [The player join (`/play` before the first question)](2026-11-13-player-join.md) | Phase 2: Core loop |
 | 2026-11-13 | [The host question loop (`/admin` after the game starts)](2026-11-13-host-question-loop.md) | Phase 2: Core loop |
+| 2026-11-13 | [The player question loop (`/play` after the first question)](2026-11-13-player-question-loop.md) | Phase 2: Core loop |
+| 2026-11-13 | [Saved game results (`/results` and `/results/[result_id]`)](2026-11-13-results.md) | Phase 2: Core loop |
