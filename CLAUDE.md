@@ -68,6 +68,11 @@ This project is a Master's thesis, so the development process is research data. 
   Suggest `adr` whenever the task involved a choice between alternatives: a new dependency, an architectural choice,
   a deviation from legacy behaviour, a scope change, or a licensing question.
 - Commit messages and PR descriptions are part of the record: explain **why**, not only what.
+- **Docs get their own branch and PR.** Never commit `docs/thesis/` together with code. After writing docs, ask
+  whether to commit; on yes, branch `docs/thesis-<short-name>` from `main` (not from the feature branch), commit
+  only `docs/thesis/` (`docs(thesis): …`), push, and open a separate PR. The docs may reference a code PR that is
+  still open. If the working tree holds someone else's uncommitted work, use a `git worktree` instead of switching
+  branches.
 - Keep Claude Code's default co-author trailer on commits (AI transparency).
 - `docs/thesis/_sessions/` holds raw transcripts archived by a hook. Never read them unless asked, and never commit them.
 
@@ -95,6 +100,7 @@ This project is a Master's thesis, so the development process is research data. 
 ## Git workflow
 
 - One branch per task: `web/<area>-<short-name>` (for example `web/auth-login`).
+- Thesis docs: `docs/thesis-<short-name>`, branched from `main`, in their own PR (see Thesis documentation).
 - Conventional commits (`feat(web): …`, `fix(web): …`, `chore: …`).
 - Open a PR with `gh pr create`. The description contains the route inventory from the `port-route` skill.
 - `upstream` is the original ClassQuiz repo. Never push to it.

@@ -19,3 +19,4 @@
 | [0015](0015-when-to-fix-a-legacy-bug.md) | When to fix a legacy bug and when to replicate it | Accepted | 2026-09-17 |
 | [0016](0016-phase-2-breakdown-and-media-scope.md) | Phase 2 breakdown into twelve PRs, and the media and scope choices it required | Accepted | 2026-09-30 |
 | [0017](0017-editor-state-without-react-hook-form.md) | Hold the quiz editor's state in plain React state with zod, not react-hook-form | Accepted | 2026-09-30 |
+| [0018](0018-uploader-file-checks-and-error-messages.md) | Check upload file types on the client and name each upload error | Proposed | 2026-11-05 |
