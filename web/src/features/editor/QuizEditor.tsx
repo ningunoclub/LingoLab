@@ -181,7 +181,8 @@ export function QuizEditor({ initial, quizId }: Props) {
     }));
 
   const addQuestion = (type: QuizQuestionType) => {
-    const question = withKey(emptyQuestion(type));
+    const empty = emptyQuestion(type);
+    const question = withKey(type === 'SLIDE' ? { ...empty, question: t('words.slide') } : empty);
     setState((current) => ({ ...current, questions: [...current.questions, question] }));
     setSelectedKey(question.key);
     setAddOpen(false);
@@ -257,6 +258,7 @@ export function QuizEditor({ initial, quizId }: Props) {
             }
             onDelete={setPendingDelete}
             onAdd={() => setAddOpen(true)}
+            onAddSlide={() => addQuestion('SLIDE')}
           />
         </aside>
         <div className="min-h-0 flex-1 overflow-y-auto p-4 md:p-8">

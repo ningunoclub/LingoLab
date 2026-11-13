@@ -275,7 +275,23 @@
       "text": "Text",
       "text_description": "Smaller longer text",
       "rectangle": "Rectangle",
-      "rectangle_description": "Just a rectangle"
+      "rectangle_description": "Just a rectangle",
+      "circle": "Circle",
+      "circle_description": "Just a circle",
+      "image": "Image",
+      "image_description": "A picture from your uploads",
+      "add_element": "Add element",
+      "add_slide": "Add slide",
+      "toolbar": "Slide tools",
+      "canvas": "Slide canvas",
+      "color": "Colour",
+      "font_size": "Font size",
+      "edit_text": "Edit text",
+      "bring_forward": "Bring forward",
+      "send_backward": "Send backward",
+      "delete_element": "Delete element",
+      "hint": "Drag elements to move them. Double-click a text to change it. With the canvas selected: arrow keys move, Delete removes, Ctrl+Z undoes.",
+      "load_error": "This slide can't be opened in the editor."
     },
     "abcd_description": "Only one answer can be chosen",
     "voting_description": "Answers don't add any points",
@@ -775,10 +791,15 @@
     "states": "States",
     "sample_error": "That username is already taken.",
     "not_ported_title": "Not built yet",
-    "not_ported_body": "This part of the app has not been migrated to the new frontend yet."
+    "not_ported_body": "This part of the app has not been migrated to the new frontend yet.",
+    "slide": "Slide"
   },
   "media": {
     "open_fullscreen": "Show full size",
     "unavailable": "Image not available"
+  },
+  "slide": {
+    "empty": "This slide is empty",
+    "unavailable": "This slide can't be shown"
   }
 }

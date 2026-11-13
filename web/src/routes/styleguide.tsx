@@ -4,6 +4,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ANSWER_SLOTS, AnswerTile } from '@/components/AnswerTile';
+import { SlideRenderer } from '@/components/SlideRenderer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { config } from '@/config';
+import { SAMPLE_SLIDE } from '@/lib/slideSample';
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -160,6 +162,13 @@ function Styleguide() {
             />
           ))}
         </div>
+      </Section>
+
+      <Section title={t('styleguide.slide')}>
+        <p className="prose-measure text-sm text-muted-foreground">
+          The read-only slide renderer, as the host screen and /view show a SLIDE question.
+        </p>
+        <SlideRenderer slide={SAMPLE_SLIDE} className="max-w-2xl" />
       </Section>
     </div>
   );

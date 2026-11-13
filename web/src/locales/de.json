@@ -280,7 +280,23 @@
       "rectangle": "Rechteck",
       "headline": "Überschrift",
       "rectangle_description": "Nur ein Rechteck",
-      "headline_description": "Ein fetter Text als Überschrift"
+      "headline_description": "Ein fetter Text als Überschrift",
+      "circle": "Kreis",
+      "circle_description": "Einfach ein Kreis",
+      "image": "Bild",
+      "image_description": "Ein Bild aus deinen Uploads",
+      "add_element": "Element hinzufügen",
+      "add_slide": "Folie hinzufügen",
+      "toolbar": "Folienwerkzeuge",
+      "canvas": "Folien-Arbeitsfläche",
+      "color": "Farbe",
+      "font_size": "Schriftgrösse",
+      "edit_text": "Text bearbeiten",
+      "bring_forward": "Nach vorne",
+      "send_backward": "Nach hinten",
+      "delete_element": "Element löschen",
+      "hint": "Ziehe Elemente, um sie zu verschieben. Doppelklicke auf einen Text, um ihn zu ändern. Wenn die Fläche ausgewählt ist: Pfeiltasten verschieben, Entf löscht, Strg+Z macht rückgängig.",
+      "load_error": "Diese Folie kann im Editor nicht geöffnet werden."
     },
     "abcd_description": "Nur eine Antwort kann ausgewählt werden",
     "voting_description": "Antworten geben keine Punkte",
@@ -788,10 +804,15 @@
     "states": "Zustände",
     "sample_error": "Dieser Benutzername ist bereits vergeben.",
     "not_ported_title": "Noch nicht verfügbar",
-    "not_ported_body": "Dieser Teil der App wurde noch nicht ins neue Frontend migriert."
+    "not_ported_body": "Dieser Teil der App wurde noch nicht ins neue Frontend migriert.",
+    "slide": "Folie"
   },
   "media": {
     "open_fullscreen": "In voller Größe anzeigen",
     "unavailable": "Bild nicht verfügbar"
+  },
+  "slide": {
+    "empty": "Diese Folie ist leer",
+    "unavailable": "Diese Folie kann nicht angezeigt werden"
   }
 }

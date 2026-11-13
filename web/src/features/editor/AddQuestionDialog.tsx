@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { EDITABLE_TYPES } from './editorData';
+import { DIALOG_TYPES } from './editorData';
 import { TYPE_DESCRIPTION_KEYS, TYPE_NAME_KEYS } from './questionTypes';
 import type { QuizQuestionType } from './types';
 
@@ -14,8 +14,8 @@ type Props = {
 };
 
 /**
- * Port of legacy `lib/editor/AddNewQuestionPopup.svelte`. It lists the types the editor
- * can build so far; legacy's link to the question-type docs returns with `/docs`.
+ * Port of legacy `lib/editor/AddNewQuestionPopup.svelte`. Slides are added from the sidebar,
+ * as in legacy; legacy's link to the question-type docs returns with `/docs`.
  */
 export function AddQuestionDialog({ open, onOpenChange, onAdd }: Props) {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ export function AddQuestionDialog({ open, onOpenChange, onAdd }: Props) {
           </DialogTitle>
         </DialogHeader>
         <ul className="grid gap-3 sm:grid-cols-2">
-          {EDITABLE_TYPES.map((type) => {
+          {DIALOG_TYPES.map((type) => {
             const descriptionKey = TYPE_DESCRIPTION_KEYS[type];
             return (
               <li key={type}>

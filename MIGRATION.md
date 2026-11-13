@@ -65,7 +65,10 @@ Work top to bottom. Each phase should be usable end to end before starting the n
   - [x] **PR 4** rich text (CKEditor → Tiptap) for the quiz title and the question text (legacy's description is a
     plain textarea). `features/editor/RichTextInput.tsx`, single line, fixed toolbar; stored HTML is shown through
     `components/RichText.tsx` (DOMPurify, backend tag allowlist) in the sidebar, status bar and dashboard
-  - [ ] **PR 5** SLIDE type (`slide.svelte`, `slides/*`, ~650): canvas editor + read-only renderer (`play/admin/slide.svelte`)
+  - [x] **PR 5** SLIDE type (`slide.svelte`, `slides/*`, ~650): canvas editor (`features/editor/slide/`, pikaso 3 +
+    konva) + read-only renderer `components/SlideRenderer.tsx` for PRs 8 and 11. Slides are added with the sidebar's
+    own "Slide" button, as in legacy. **Scope change (Bruno, 2026-11-13): image elements**, picked through the PR 3
+    uploader; legacy had the Image element commented out. Unused legacy `slides/types/*.svelte` not ported (dead code)
 - [ ] `/admin` (340) and `/play` (220): live game, `lib/play/*` (~2,000) + `lib/admin.svelte`. **Split into four PRs:**
   - [ ] **PR 6** host lobby: `/admin` connect, PIN, QR code, player list, kick, start (`admin/game_not_started`)
   - [ ] **PR 7** player join: `/play` PIN check, username, custom field, rejoin, kicked, title screen (`join`, `title`)
@@ -85,6 +88,9 @@ Order: 1 → 12. PR 6 does not depend on the editor and can be pulled forward. T
 - **Pixabay image search: dropped.** The search is proxied by the backend, but the result thumbnails load directly from
   Pixabay's servers in the browser (privacy rules).
 - **SLIDE type: ported**, with `pikaso` (MIT; depends on `konva` and `deepmerge`, both MIT).
+- **Slide images (2026-11-13): added** although legacy had none (a deliberate exception to "no new features").
+  Stored as a path on our server (`/api/v1/storage/download/<id>`) inside the pikaso JSON; images from other
+  servers in a stored slide are never drawn (privacy rules).
 - **Video tab in the uploader: left out for now.** It opens `/edit/videos`, a Phase 4 cut candidate; revisit with that decision.
 - **Captcha games in `/play`:** no hCaptcha/reCAPTCHA script is ever loaded. A game whose `check_captcha` answers
   `enabled: true` (started through the API directly) shows a "this game can't be joined here" message.
@@ -132,6 +138,9 @@ Anything only a person with a real backend/device can confirm goes here, for one
 - [ ] `/create` and `/edit` (Phase 2 PR 1): reorder questions by **dragging with a mouse and with a finger** (only the
   keyboard path is covered by e2e). Leave an edit session open for more than an hour and save (the expired-session
   retry is only unit-tested). Close the tab on a half-finished new quiz and check the draft comes back on `/create`.
+- [ ] `/create` and `/edit` (Phase 2 PR 5): drag, resize and rotate slide elements **with a mouse and with a finger**,
+  double-click a text and edit it in place, upload a large photo as a slide image (e2e uses a 1×1 PNG and the keyboard).
+  Host a quiz with a slide in the legacy app after saving it here.
 - [ ] `/create` and `/edit` (Phase 2 PR 2): drag the two thumbs of a RANGE question's slider **with a mouse and with a
   finger** (e2e only uses the keyboard). Play one question of each type in the legacy app after saving it here; the
   backend round-trip was checked, the play screens were not.
@@ -265,3 +274,10 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `lib/inline-editor.svelte` | Balloon toolbar: the formatting buttons only appear on a mouse/touch selection, so they cannot be found or reached with the keyboard. The editor has no label. | Fixed toolbar above the text (ARIA toolbar: one Tab stop, arrow keys), labelled textbox, `aria-invalid` + error message. Same buttons as legacy (bold, italic, strikethrough, superscript, subscript, undo, redo); shortcuts are Tiptap's (⌘/Ctrl+B, I, Shift+S, `.`, `,`, Z). Labels are new keys `editor.formatting.*` (en + de). |
 | `lib/editor/sidebar.svelte`, `routes/dashboard`, `lib/play/*` | Stored title/question HTML is rendered with `{@html}` unfiltered, trusting the backend's bleach. | Rendered through DOMPurify with the same allowlist (defence in depth, the HTML can come from other users' public quizzes). Plain-text places (tooltips, the delete confirmation) strip the tags. |
 | `lib/inline-editor.svelte` | CKEditor's TextTransformation turns `...`, `--`, quotes, `(c)` etc. into typographic characters while typing. | Kept through Tiptap Typography, with the `2x3` → `2×3` rule turned off (in a language quiz an "x" after a number is rarely a multiplication sign). Validation still counts the HTML length (tags included), as legacy's yup did. |
+| `lib/editor/slide.svelte` | The canvas takes the size of the editor's container when the slide is created, so a slide's layout depends on the teacher's window (a slide made on a laptop is 920×786, on a large screen something else). The selection frame is black or white with the theme, and the canvas is transparent: in dark mode the default black text sits on a dark grey card. | New slides get a fixed 1280×720 stage that pikaso scales to fit (stored slides keep their size and are letterboxed). The slide is a white sheet in both themes, in the editor and the renderer; the frame is Lingo Teal. |
+| `lib/editor/slide.svelte` | Changes are stored from pikaso's `*` event only. Colour, font size and layer order use `update()`/`updateText()`, which fire no event, so they reach the quiz only with the next canvas event (a colour picked last before saving is lost). pikaso's arrow-key move is animated and reported before it ends, so the stored position trails one step behind. | Every toolbar and keyboard edit exports the canvas itself. Arrow keys move directly (5 px, 20 px with Shift). |
+| `lib/editor/slide.svelte` (pikaso) | pikaso listens for Backspace/Delete, arrows and Ctrl+Z on `window`: typing Backspace in the question title deletes the selected slide element, Ctrl+Z in a text field undoes the canvas. The listeners are never removed. | pikaso's keyboard handling is off; the canvas handles these keys only while it has focus (it is a focusable `application` with a description of the keys). |
+| `lib/editor/slides/element_selection.svelte` | The shortcut keys (h, t, r, c) are listened for on `document.body` for as long as the page lives (never removed). Circle's name and description are hardcoded English. | The keys work only while the add menu is open (plus `i` for images). `editor.slide.circle*` (en + de). |
+| `lib/editor/slides/*` | Deleting an element needs Delete/Backspace and editing a text needs a double-click, so neither works on a touch screen or is discoverable. The edit menu's icons have no labels. A new element is added to the current selection, so after adding two in a row both are selected. The settings menu repeats title and time. Default fill `#ff000d`, placeholder words "Headline"/"Text" in English. | "Delete element" and "Edit text" buttons; every tool has a label and tooltip (`editor.slide.*`). A new element is selected alone. Title and time are the card's normal fields. Default fill is answer colour 1; placeholders are translated. |
+| `lib/play/admin/slide.svelte` | The rendered picture's alt text is "Slide image" for every slide. The picture is exported at screen resolution. | Alt text is the slide's words, top to bottom (`words.slide` when it has none). Exported at 2× for projectors. |
+| stored slides (pikaso 2.9) | Legacy's pikaso exports the label added last with `zIndex: 0`, so after reopening it lies under the other elements (legacy's own renderer shows it the same way). | Left as is: it is stored data, and pikaso 3 exports correct indexes for new edits. |
