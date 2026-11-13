@@ -1,0 +1,71 @@
+{
+  "id": "d27471fa-eb23-4f2a-a01c-be72373d5ffb",
+  "quiz": { "id": "1715c5e7-f8aa-48b1-9033-31c8292b4526", "title": "Irregular verbs" },
+  "user": { "id": "9fc47546-4e50-4663-b4ee-816119f361db" },
+  "timestamp": "2026-11-13T09:39:54.042830",
+  "player_count": 3,
+  "note": null,
+  "title": "Irregular verbs",
+  "description": "Past simple of common irregular verbs.",
+  "questions": [
+    {
+      "time": "20",
+      "type": "ABCD",
+      "image": null,
+      "question": "<b>go</b> → ?",
+      "answers": [{ "right": true, "answer": "went" }, { "right": false, "answer": "goed" }]
+    },
+    {
+      "time": "30",
+      "type": "CHECK",
+      "image": null,
+      "question": "Which are past forms?",
+      "answers": [
+        { "right": true, "answer": "saw" },
+        { "right": false, "answer": "seed" },
+        { "right": true, "answer": "took" }
+      ]
+    },
+    {
+      "time": "20",
+      "type": "VOTING",
+      "image": null,
+      "question": "Which verb was hardest?",
+      "answers": [{ "answer": "go" }, { "answer": "see" }]
+    },
+    { "time": "0", "type": "SLIDE", "image": null, "question": "Well done!", "answers": "{}" },
+    {
+      "time": "20",
+      "type": "ORDER",
+      "image": null,
+      "question": "Put in order",
+      "answers": [{ "answer": "I" }, { "answer": "went" }, { "answer": "home" }]
+    }
+  ],
+  "answers": [
+    [
+      { "username": "Anna", "answer": "went", "right": true, "time_taken": 1234.5, "score": 900 },
+      { "username": "Ben", "answer": "goed", "right": false, "time_taken": 5000, "score": 0 }
+    ],
+    [
+      { "username": "Anna", "answer": "02", "right": true, "time_taken": 3000, "score": 800 },
+      { "username": "Ben", "answer": "0", "right": false, "time_taken": 4000, "score": 0 }
+    ],
+    [
+      { "username": "Anna", "answer": "go", "right": false, "time_taken": 2000, "score": 0 },
+      { "username": "Ben", "answer": "go", "right": false, "time_taken": 2500, "score": 0 }
+    ],
+    [],
+    [
+      {
+        "username": "Ben",
+        "answer": "I, went, home",
+        "right": true,
+        "time_taken": 9000,
+        "score": 500
+      }
+    ]
+  ],
+  "player_scores": { "Ben": "500", "Anna": "1700", "Cleo": "0" },
+  "custom_field_data": { "Anna": "3b", "Ben": "3a" }
+}

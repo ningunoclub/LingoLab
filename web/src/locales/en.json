@@ -627,17 +627,26 @@
     "player_count": "Player count",
     "general_overview": {
       "sentence": "The quiz \"<b>{{title}}</b>\", which was played on <b>{{date}}</b> had <b>{{player_count}}</b> players with an average score of <b>{{average_score}}</b>."
-    }
+    },
+    "load_failed": "Your results couldn't be loaded. Please try again.",
+    "not_found": "Result not found",
+    "not_found_text": "This result doesn't exist, or it belongs to another account.",
+    "back_to_list": "All results"
   },
   "result_page": {
     "player_name": "Player name",
     "custom_field": "Custom field",
     "average_score": "Average score: {{average_score}}",
-    "correct_answer": "{{count}} correct answer",
-    "correct_answer_plural": "{{count}} correct answers",
     "time_taken": "Time taken",
     "player_score": "Player Score",
-    "player_correct_questions": "Correct Answers"
+    "player_correct_questions": "Correct Answers",
+    "correct_answer_one": "{{count}} correct answer",
+    "correct_answer_other": "{{count}} correct answers",
+    "no_answers": "Nobody answered this question.",
+    "answer_chart": "How often each answer was chosen",
+    "answer_count_one": "{{count}} player",
+    "answer_count_other": "{{count}} players",
+    "show_answers": "Show answers"
   },
   "controllers": {
     "add_new_controller": "Add new controller",

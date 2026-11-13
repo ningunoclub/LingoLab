@@ -638,18 +638,27 @@
     "player_count": "Spieleranzahl",
     "no_results_so_far": "Noch keine Ergebnisse gespeichert...",
     "general_overview": {
-      "sentence": "Das Quiz \"{{title}}\", welches am {{date}} gestartet wurde, hatte {{player_count}} Spieler mit einem durchschnittlichen Score von {{average_score}}."
-    }
+      "sentence": "Das Quiz \"<b>{{title}}</b>\", welches am <b>{{date}}</b> gestartet wurde, hatte <b>{{player_count}}</b> Spieler mit einem durchschnittlichen Score von <b>{{average_score}}</b>."
+    },
+    "load_failed": "Deine Ergebnisse konnten nicht geladen werden. Bitte versuche es noch einmal.",
+    "not_found": "Ergebnis nicht gefunden",
+    "not_found_text": "Dieses Ergebnis gibt es nicht, oder es gehört zu einem anderen Konto.",
+    "back_to_list": "Alle Ergebnisse"
   },
   "result_page": {
     "custom_field": "Benutzerdefiniertes Feld",
-    "correct_answer": "{{count}} richtige Antwort",
     "average_score": "Durchschnittliche Punktzahl: {{average_score}}",
     "time_taken": "benötigte Zeit",
     "player_name": "Spielername",
-    "correct_answer_plural": "{{count}} richtige Antworten",
     "player_score": "Spieler Score",
-    "player_correct_questions": "Richtige Antworten"
+    "player_correct_questions": "Richtige Antworten",
+    "correct_answer_one": "{{count}} richtige Antwort",
+    "correct_answer_other": "{{count}} richtige Antworten",
+    "no_answers": "Niemand hat diese Frage beantwortet.",
+    "answer_chart": "Wie oft jede Antwort gewählt wurde",
+    "answer_count_one": "{{count}} Spieler",
+    "answer_count_other": "{{count}} Spieler",
+    "show_answers": "Antworten anzeigen"
   },
   "navbar": {
     "donate": "Spenden"

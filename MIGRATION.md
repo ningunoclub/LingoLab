@@ -86,7 +86,9 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     and `components/FinalRanking` (PR 9 adds the player's own score to it). `canvas-confetti` 1.9.4 (ISC) added;
     no confetti with reduced motion. Legacy's row-reorder animation on the scoreboard is not reproduced
   - [ ] **PR 9** player question loop: answer screens for all types, solutions, per-question results, end screen
-- [ ] **PR 10** `/results` (85) and `/results/[result_id]` (~480 with its child components)
+- [x] **PR 10** `/results` (85) and `/results/[result_id]` (~480 with its child components). Data parsing in
+  `features/results/resultsApi.ts`, the sums and counts in `resultStats.ts`. Tabs are the shadcn Tabs (new). Both routes
+  now need a sign-in. Phones get cards instead of the list table. CHECK answers show their texts, not the stored indices
 - [ ] **PR 11** `/view/[quiz_id]` (343 + `lib/view_quiz/*`): rating; reuses the start-game and download dialogs and the SLIDE renderer
 - [ ] **PR 12** `/edit/files` (185) and `/dashboard/files` (49): needs the uploader from PR 3
 
@@ -310,3 +312,13 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `play` | The rejoin cookie keeps the connection id of the first join. After one rejoin the backend knows a new id, so a second reload or dropped connection can no longer rejoin. The cookie lives 3,600 days. | The cookie is updated after each rejoin and lives two hours, like the seat in Redis (`ex=7200`). |
 | `play` | On reconnect, `game_mode` is fetched for the PIN in the URL, which is usually empty after a reload (request to `check_captcha/`). | Fetched for the saved game's PIN. |
 | `play` | The "leave this page?" warning is on from the first screen, where nothing can be lost; a kick turns it off for good. | Warns only while in a game (from joining until the final results). |
+| `routes/results/*` | No sign-in guard: signed out, `/results` gets a 401 and says "No results saved so far"; `/results/[id]` renders with `undefined` and crashes. A failed request on a signed-in list also reads as "no results". | Both routes use `requireAuth` (login with `returnTo`). A failed list load shows an error with Retry; an unknown or malformed id (404/422) shows "Result not found" with a link back. |
+| `routes/results/*` | Both loads append `?include_quiz=true`, a parameter the backend does not have (it always includes the quiz). | Dropped. |
+| `routes/results/+page.svelte`, `general_overview.svelte` | The quiz title is rendered with `{@html}`, and goes unescaped into the overview sentence, which is itself `{@html}`. | Titles are plain text (as on the dashboard). The sentence keeps its `<b>` markup through `<Trans>`; the values stay text. The German sentence had no `<b>`; added so both languages match. |
+| `general_overview.svelte`, `question_overview.svelte` | With no players or no answers the averages print "NaN". | "–". |
+| `player_overview.svelte` | A player with a score but no stored answers shows an empty "correct answers" cell (`undefined`). The custom-field cell is skipped for players without a value, so the row is one cell short. | 0, and an empty cell. |
+| `question_tab_dropdown.svelte` | A CHECK answer is stored as the ticked indices (`"02"`), which the answer column prints as is. The counting also logs to the console on every row. | The answer column shows the answer texts ("saw, took"); counting is unchanged; no logging. |
+| `question_overview.svelte` | SLIDE questions get a row with "Average score: NaN" / "0 correct answers", and opening it iterates the slide's canvas JSON string as if it were a list of answers. | A slide row shows a "Slide" label and its text, with no figures and nothing to open. |
+| `question_tab_dropdown.svelte` | Right and wrong are ✅/❌ emoji; time taken is always `1.234s` with a dot. | lucide Check/X icons with screen-reader text; the time is formatted for the active language. |
+| `locales` | `result_page.correct_answer_plural` uses the i18next v3 `_plural` suffix, which i18next 26 ignores (it would say "2 correct answer"). | Renamed to `correct_answer_one` / `correct_answer_other`. |
+| `routes/results/+page.svelte` | The player count is the number of entries in `player_scores`, not the stored `player_count`. | Replicated. The backend's `set_note` is never called; notes are only shown (parity). |
