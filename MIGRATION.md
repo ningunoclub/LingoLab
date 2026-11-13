@@ -75,7 +75,11 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     `useHostGame.ts`. QR code still drawn by the backend (`/api/v1/utils/qr/{pin}`), so no `qrcode.react`. Unused
     `check_captcha`/`game_mode` fetch and the ClassQuizControllers code are not ported. After "Start" a placeholder
     shows until PR 8
-  - [ ] **PR 7** player join: `/play` PIN check, username, custom field, rejoin, kicked, title screen (`join`, `title`)
+  - [x] **PR 7** player join: `/play` PIN check, username, custom field, rejoin, kicked, title screen (`join`, `title`).
+    `features/play/`: Zustand store (`playStore.ts`, PR 9 adds questions and results), socket wiring in
+    `usePlayerGame.ts`. The two js-cookie cookies (`joined_game`, `kicked`) are written with `document.cookie`. Captcha
+    games show a notice; no captcha script is loaded. Plausible event and Sentry dropped. After the first question a
+    placeholder shows until PR 9
   - [ ] **PR 8** host question loop: controls, timer, question/results/voting screens, Enter/Space shortcuts, final
     results, export, save results
   - [ ] **PR 9** player question loop: answer screens for all types, solutions, per-question results, end screen
@@ -290,3 +294,9 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `admin` | Players are `<span onclick>` (kick by click), not keyboard operable. | Real buttons labelled "Remove <name> from the game". Kicking still needs no confirmation, as in legacy. |
 | `admin` | A kicked player's name stays reserved in Redis (`game_session:<pin>:players:<name>`), so it can't rejoin under that name. | Backend behaviour, unchanged. |
 | `admin` | Reloading the host screen loses the host role: the backend answers `already_registered_as_admin`. | Kept (backend). The leave warning (`beforeunload`) stays on while connected, as in legacy. |
+| `play` | `window.alert` for a wrong PIN, a taken name and a kick. A game that has already started and a browser that was kicked in the last day get no message at all (the kicked one only a console banner). | Inline messages on the join card (`play_page.join.*`, en + de), A2–B1 wording. |
+| `play` | The PIN form's Submit button submits the form natively (no handler), reloading `/play` and losing the PIN; the check only ever ran by itself at six digits. | The check still starts at six digits; the button no longer reloads the page. |
+| `play` | The kick handler keeps the `joined_game` cookie and reloads; the backend does not forget the seat, so the reload rejoins the kicked player straight into the game. | The kick deletes the rejoin cookie, so the player stays out (and the one-day `kicked` block applies as intended). |
+| `play` | The rejoin cookie keeps the connection id of the first join. After one rejoin the backend knows a new id, so a second reload or dropped connection can no longer rejoin. The cookie lives 3,600 days. | The cookie is updated after each rejoin and lives two hours, like the seat in Redis (`ex=7200`). |
+| `play` | On reconnect, `game_mode` is fetched for the PIN in the URL, which is usually empty after a reload (request to `check_captcha/`). | Fetched for the saved game's PIN. |
+| `play` | The "leave this page?" warning is on from the first screen, where nothing can be lost; a kick turns it off for good. | Warns only while in a game (from joining until the final results). |

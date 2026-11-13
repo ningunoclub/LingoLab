@@ -38,6 +38,7 @@ export type ServerToClientEvents = {
   error: () => void;
 
   // --- joining ---
+  /** `PlayGame.to_player_data()`: the game without questions, plus `question_count`. */
   joined_game: (data: unknown) => void;
   rejoined_game: (data: unknown) => void;
   game_not_found: () => void;
@@ -75,7 +76,7 @@ export type ClientToServerEvents = {
     captcha?: string;
     custom_field?: string;
   }) => void;
-  rejoin_game: (data: { old_sid: string; username?: string }) => void;
+  rejoin_game: (data: { old_sid: string; game_pin: string; username: string }) => void;
   start_game: (data: Record<string, never>) => void;
 
   register_as_admin: (data: { game_pin: string; game_id: string }) => void;
