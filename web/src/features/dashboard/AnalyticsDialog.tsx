@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Bruno Zingg
 // SPDX-License-Identifier: MPL-2.0
 import { useTranslation } from 'react-i18next';
+import { RichText } from '@/components/RichText';
 import {
   Dialog,
   DialogContent,
@@ -42,7 +43,9 @@ export function AnalyticsDialog({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display">{t('words.analytics')}</DialogTitle>
-          <DialogDescription>{item?.title}</DialogDescription>
+          <DialogDescription>
+            <RichText html={item?.title ?? ''} />
+          </DialogDescription>
         </DialogHeader>
 
         <section className="flex flex-col gap-2">

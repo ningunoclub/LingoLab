@@ -89,7 +89,13 @@ test('creates a multiple-choice quiz and saves it', async ({ page }) => {
   await expect(save).toBeDisabled();
   await expect(status(page)).toHaveText('A title is required');
 
-  await page.getByLabel('Title').fill('Weather words');
+  // The title is a rich-text field: type, then switch bold on from the toolbar and type on.
+  const title = page.getByRole('textbox', { name: 'Title' });
+  await title.click();
+  await page.keyboard.type('Weather ');
+  await page.getByRole('button', { name: 'Bold' }).click();
+  await page.keyboard.type('words');
+  await expect(page.getByRole('button', { name: 'Bold' })).toHaveAttribute('aria-pressed', 'true');
   await page.getByLabel('Description').fill('Vocabulary for unit 3');
   await expect(status(page)).toHaveText('You need at least one question');
 
@@ -105,6 +111,8 @@ test('creates a multiple-choice quiz and saves it', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Answer 2', exact: true }).fill('Sand');
 
   await expect(status(page)).toHaveText('Weather words');
+  // The status bar and the sidebar show the formatting, not the tags.
+  await expect(status(page).locator('strong')).toHaveText('words');
   await save.click();
 
   await expect(page).toHaveURL(/\/dashboard$/);
@@ -112,7 +120,7 @@ test('creates a multiple-choice quiz and saves it', async ({ page }) => {
   expect(backend.saved).toHaveLength(1);
   expect(backend.saved[0]?.editId).toBe('abcd1234');
   expect(backend.saved[0]?.body).toMatchObject({
-    title: 'Weather words',
+    title: 'Weather <strong>words</strong>',
     description: 'Vocabulary for unit 3',
     public: false,
     questions: [
@@ -215,13 +223,13 @@ test('builds one question of every other type and saves them', async ({ page }) 
 test('keeps an unsaved new quiz as a draft', async ({ page, context }) => {
   await mockEditor(page);
   await page.goto('/create?title=Unit%204');
-  await expect(page.getByLabel('Title')).toHaveValue('Unit 4');
+  await expect(page.getByLabel('Title')).toHaveText('Unit 4');
   await page.getByLabel('Description').fill('Half-finished');
 
   const second = await context.newPage();
   await mockEditor(second);
   await second.goto('/create');
-  await expect(second.getByLabel('Title')).toHaveValue('Unit 4');
+  await expect(second.getByLabel('Title')).toHaveText('Unit 4');
   await expect(second.getByLabel('Description')).toHaveValue('Half-finished');
 });
 
@@ -245,7 +253,7 @@ test('edits, reorders and saves an existing quiz', async ({ page }) => {
   const backend = await mockEditor(page);
   await page.goto(`/edit?quiz_id=${QUIZ_ID}`);
 
-  await expect(page.getByLabel('Title')).toHaveValue('Irregular verbs');
+  await expect(page.getByLabel('Title')).toHaveText('Irregular verbs');
   await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled();
 
   const sidebar = page.getByRole('navigation', { name: 'Questions' });
@@ -309,7 +317,7 @@ test('a failed save keeps the editor open', async ({ page }) => {
 
   await expect(page.getByText("The quiz couldn't be saved.")).toBeVisible();
   await expect(page).toHaveURL(/\/edit\?quiz_id=/);
-  await expect(page.getByLabel('Title')).toHaveValue('Irregular verbs 2');
+  await expect(page.getByLabel('Title')).toHaveText('Irregular verbs 2');
 });
 
 test('reports a quiz that does not exist', async ({ page }) => {
@@ -327,4 +335,85 @@ test('sends signed-out visitors to the login page and back', async ({ page }) =>
   await page.goto(`/edit?quiz_id=${QUIZ_ID}`);
   await expect(page).toHaveURL(/\/account\/login\?returnTo=/);
   expect(new URL(page.url()).searchParams.get('returnTo')).toBe(`/edit?quiz_id=${QUIZ_ID}`);
+});
+
+// A 1×1 transparent PNG, so thumbnails and previews have something real to load.
+const PIXEL_PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  'base64',
+);
+const UPLOADED_ID = '11111111-1111-4111-8111-111111111111';
+const LIBRARY_ID = '22222222-2222-4222-8222-222222222222';
+
+/** Fakes the storage endpoints the uploader and the image previews use. */
+async function mockStorage(page: Page) {
+  const uploads: string[] = [];
+  await page.route('**/api/v1/storage/', (route) => {
+    uploads.push(route.request().headers()['content-type'] ?? '');
+    return route.fulfill({ json: { id: UPLOADED_ID } });
+  });
+  await page.route('**/api/v1/storage/list/last*', (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: LIBRARY_ID,
+          uploaded_at: '2026-11-01T10:00:00',
+          mime_type: 'image/png',
+          size: PIXEL_PNG.length,
+          filename: 'clouds.png',
+          alt_text: null,
+          imported: false,
+          quizzes: [],
+          quiztivities: [],
+        },
+      ],
+    }),
+  );
+  await page.route('**/api/v1/storage/info/*', (route) =>
+    route.fulfill({ status: 200, headers: { 'Content-Type': 'image/png' }, body: '' }),
+  );
+  await page.route('**/api/v1/storage/download/*', (route) =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG }),
+  );
+  return { uploads };
+}
+
+test('adds a cover by upload and a question image from the library', async ({ page }) => {
+  const backend = await mockEditor(page);
+  const storage = await mockStorage(page);
+  await page.goto(`/edit?quiz_id=${QUIZ_ID}`);
+  await expect(page.getByLabel('Title')).toHaveText('Irregular verbs');
+
+  // Cover: upload a new image.
+  await page.getByRole('button', { name: 'Add Media: Cover image' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', { name: 'Select the Upload Type' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'Image' }).click();
+  await dialog
+    .locator('input[type="file"]')
+    .setInputFiles({ name: 'cover.png', mimeType: 'image/png', buffer: PIXEL_PNG });
+  await expect(dialog.getByText(/cover\.png/)).toBeVisible();
+  await dialog.getByRole('button', { name: 'Upload' }).click();
+  await expect(dialog).toBeHidden();
+  expect(storage.uploads[0]).toMatch(/^multipart\/form-data/);
+  await expect(page.getByRole('button', { name: 'Add Media: Cover image' })).toBeHidden();
+
+  // Question 1: pick an earlier upload.
+  await page
+    .getByRole('navigation', { name: 'Questions' })
+    .getByRole('button', { name: /Past simple of "go"\?/ })
+    .click();
+  await page.getByRole('button', { name: 'Add Media: Question 1' }).click();
+  await dialog.getByRole('button', { name: 'Library' }).click();
+  await expect(dialog.getByText('clouds.png')).toBeVisible();
+  await dialog.getByRole('button', { name: 'Select' }).click();
+  await expect(dialog).toBeHidden();
+
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+  expect(backend.saved[0]?.body).toMatchObject({
+    cover_image: UPLOADED_ID,
+    background_image: null,
+    questions: [{ image: LIBRARY_ID }, { image: null }],
+  });
 });

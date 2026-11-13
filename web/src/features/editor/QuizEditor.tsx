@@ -7,6 +7,7 @@ import { AlertCircle, ArrowLeft, Loader2, Save } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { RichText } from '@/components/RichText';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -223,7 +224,7 @@ export function QuizEditor({ initial, quizId }: Props) {
               <span className="truncate">{issueText(firstIssue, t)}</span>
             </>
           ) : (
-            state.title
+            <RichText html={state.title} />
           )}
         </p>
         <Button
