@@ -420,6 +420,19 @@
       "qr_alt": "QR code to join the game",
       "kick_player": "Remove {{username}} from the game",
       "kick_hint": "Click a name to remove the player."
+    },
+    "loop": {
+      "time_left": "{{seconds}} seconds left",
+      "progress": "Question",
+      "correct": "Correct answer",
+      "wrong": "Wrong answer",
+      "votes_one": "{{count}} answer",
+      "votes_other": "{{count}} answers",
+      "chart": "Answers per option",
+      "scoreboard": "Scoreboard",
+      "accepted_answers": "Accepted answers",
+      "final_ranking": "Final ranking",
+      "results_saved": "Results saved"
     }
   },
   "password_reset_page": {

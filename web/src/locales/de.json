@@ -420,6 +420,19 @@
       "qr_alt": "QR-Code zum Beitreten",
       "kick_player": "{{username}} aus dem Spiel entfernen",
       "kick_hint": "Klicke auf einen Namen, um die Person zu entfernen."
+    },
+    "loop": {
+      "time_left": "Noch {{seconds}} Sekunden",
+      "progress": "Frage",
+      "correct": "Richtige Antwort",
+      "wrong": "Falsche Antwort",
+      "votes_one": "{{count}} Antwort",
+      "votes_other": "{{count}} Antworten",
+      "chart": "Antworten pro Option",
+      "scoreboard": "Rangliste",
+      "accepted_answers": "Akzeptierte Antworten",
+      "final_ranking": "Schlussrangliste",
+      "results_saved": "Ergebnisse gespeichert"
     }
   },
   "import_page": {

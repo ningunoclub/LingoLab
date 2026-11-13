@@ -2,16 +2,16 @@
 // SPDX-FileCopyrightText: 2026 Bruno Zingg
 // SPDX-License-Identifier: MPL-2.0
 //
-// Port of the lobby half of legacy `routes/admin/+page.svelte`. The question loop, final
-// results, export and "save results" follow in PR 8.
+// Port of legacy `routes/admin/+page.svelte`: connecting, the lobby (`HostLobby`) and the
+// running game (`HostGame`).
 import { Link } from '@tanstack/react-router';
 import { CircleAlert, LoaderCircle } from 'lucide-react';
 import { type CSSProperties, type ReactNode, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ComingSoon } from '@/components/ComingSoon';
 import { Button } from '@/components/ui/button';
 import { mediaUrl } from '@/lib/media';
 import { useHideNavbar } from '@/stores/uiStore';
+import { HostGame } from './HostGame';
 import { HostLobby } from './HostLobby';
 import { canStartGame, useHostStore } from './hostStore';
 import { useHostGame } from './useHostGame';
@@ -80,15 +80,8 @@ export function HostPage({ gamePin, gameId, autoConnect }: Props) {
         onKick={controls.kickPlayer}
       />
     );
-  } else {
-    // Question loop: PR 8.
-    content = (
-      <div className="px-4 py-10">
-        <div className="mx-auto max-w-lg rounded-xl border bg-card text-card-foreground">
-          <ComingSoon route="/admin" />
-        </div>
-      </div>
-    );
+  } else if (quiz) {
+    content = <HostGame quiz={quiz} gamePin={gamePin} controls={controls} />;
   }
 
   return (

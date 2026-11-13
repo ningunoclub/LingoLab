@@ -22,6 +22,16 @@ export type SetQuestionNumberPayload = {
   time?: string;
 };
 
+/** One player's answer to one question (backend `AnswerData`). */
+export type AnswerData = {
+  username: string;
+  answer: string;
+  right: boolean;
+  /** Milliseconds. */
+  time_taken: number;
+  score: number;
+};
+
 export type ControlVisibilityPayload = { visible: boolean };
 
 export type RegisteredAsAdminPayload = {
@@ -55,8 +65,10 @@ export type ServerToClientEvents = {
   // --- game flow ---
   start_game: () => void;
   set_question_number: (data: SetQuestionNumberPayload) => void;
+  /** A list of `AnswerData`; validated in the feature. */
   question_results: (results: unknown) => void;
   solutions: (solution: unknown) => void;
+  /** `{ "<question index>": AnswerData[] }`; validated in the feature. */
   final_results: (results: unknown) => void;
   player_answer: (data: Record<string, never>) => void;
   everyone_answered: (data: Record<string, never>) => void;
@@ -84,7 +96,8 @@ export type ClientToServerEvents = {
   set_control_visibility: (data: ControlVisibilityPayload) => void;
 
   set_question_number: (questionIndex: string) => void;
-  get_question_results: (data: { question_number: number }) => void;
+  /** The backend reads only `question_number`; legacy sends `game_id` along. */
+  get_question_results: (data: { game_id?: string; question_number: number }) => void;
   submit_answer: (data: { question_index: number; answer: string }) => void;
   show_solutions: (data: Record<string, never>) => void;
   get_final_results: (data: Record<string, never>) => void;
