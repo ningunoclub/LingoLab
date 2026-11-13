@@ -56,7 +56,7 @@ export function parseGameQuiz(raw: string | null): GameQuiz | null {
 export type ChoiceAnswer = { answer: string; right: boolean; color: string | null };
 
 /** The answers of a list-type question; empty for RANGE and SLIDE, or anything unreadable. */
-export function choiceAnswers(question: GameQuestion): ChoiceAnswer[] {
+export function choiceAnswers(question: Pick<GameQuestion, 'answers'>): ChoiceAnswer[] {
   if (!Array.isArray(question.answers)) return [];
   return question.answers.flatMap((raw: unknown) => {
     if (typeof raw !== 'object' || raw === null) return [];
