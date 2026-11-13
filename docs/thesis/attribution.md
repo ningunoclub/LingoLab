@@ -36,6 +36,7 @@ grep -rL "Bruno Zingg" --include=*.py classquiz                                 
 | DOMPurify | MPL-2.0 OR Apache-2.0 | Sanitises stored quiz HTML before it is rendered (`components/RichText.tsx`); legacy depends on it too (PR #19, ADR-0019) |
 | pikaso | MIT | Canvas editor and read-only renderer for SLIDE questions (`features/editor/slide/`, `components/SlideRenderer.tsx`); legacy uses it too (2.9.0, here 3.0.3). Pulls in deepmerge (MIT) (PR #21) |
 | Konva | MIT | Canvas library under pikaso, declared directly and pinned with it (PR #21) |
+| canvas-confetti | ISC | Confetti after the final ranking on the host screen (`components/FinalRanking.tsx`); legacy uses it too. Not called when the viewer prefers reduced motion (PR #26) |
 | Lexend, Atkinson Hyperlegible Next (via Fontsource) | OFL-1.1 | Fonts |
 | chrome-devtools-mcp | Apache-2.0 | Development tool only |
 | UI UX Pro Max skill | MIT | Development tool only (one-time) |
