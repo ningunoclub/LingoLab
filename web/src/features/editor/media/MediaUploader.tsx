@@ -22,6 +22,12 @@ type Props = {
   onSelect: (id: string) => void;
   /** Names the field, so several "Add Media" buttons on one page stay distinguishable. */
   fieldLabel: string;
+  /**
+   * Controls the dialog from outside, e.g. from a menu item. When set, no "Add Media"
+   * button is rendered.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 /**
@@ -32,13 +38,16 @@ type Props = {
  * (undefined = cover, -1 = background, n = question). Here each field passes its own
  * `onSelect`. The Video and Pixabay choices are left out (MIGRATION.md, Phase 2 decisions).
  */
-export function MediaUploader({ onSelect, fieldLabel }: Props) {
+export function MediaUploader({ onSelect, fieldLabel, open: openProp, onOpenChange }: Props) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [openState, setOpenState] = useState(false);
   const [source, setSource] = useState<Source | null>(null);
+  const controlled = openProp !== undefined;
+  const open = controlled ? openProp : openState;
 
   const setOpenAndReset = (next: boolean) => {
-    setOpen(next);
+    if (controlled) onOpenChange?.(next);
+    else setOpenState(next);
     // Legacy: closing always returns to the type choice.
     if (!next) setSource(null);
   };
@@ -50,16 +59,18 @@ export function MediaUploader({ onSelect, fieldLabel }: Props) {
 
   return (
     <>
-      <Button
-        type="button"
-        variant="outline"
-        className="min-h-11 w-full border-2 border-dashed sm:w-96"
-        aria-label={`${t('uploader.add_image')}: ${fieldLabel}`}
-        onClick={() => setOpen(true)}
-      >
-        <ImagePlus aria-hidden="true" />
-        {t('uploader.add_image')}
-      </Button>
+      {controlled ? null : (
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-11 w-full border-2 border-dashed sm:w-96"
+          aria-label={`${t('uploader.add_image')}: ${fieldLabel}`}
+          onClick={() => setOpenAndReset(true)}
+        >
+          <ImagePlus aria-hidden="true" />
+          {t('uploader.add_image')}
+        </Button>
+      )}
 
       <Dialog open={open} onOpenChange={setOpenAndReset}>
         <DialogContent className="sm:max-w-2xl">

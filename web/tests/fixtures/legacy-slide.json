@@ -1,0 +1,127 @@
+{
+  "stage": {
+    "attrs": {
+      "width": 920,
+      "height": 786,
+      "x": 0,
+      "y": 0
+    },
+    "filters": [],
+    "className": "Stage"
+  },
+  "layer": {
+    "attrs": {
+      "x": 0,
+      "y": 0,
+      "width": 920,
+      "height": 786
+    },
+    "filters": [],
+    "className": "Layer"
+  },
+  "background": {
+    "image": {
+      "attrs": {
+        "x": 0,
+        "y": 0
+      },
+      "filters": [],
+      "className": "Image",
+      "zIndex": 0
+    },
+    "overlay": {
+      "attrs": {
+        "x": 0,
+        "y": 0
+      },
+      "filters": [],
+      "className": "Rect",
+      "zIndex": 1
+    }
+  },
+  "shapes": [
+    {
+      "attrs": {
+        "x": 40,
+        "y": 40,
+        "width": 138.15,
+        "height": 35
+      },
+      "filters": [],
+      "className": "Label",
+      "zIndex": 4,
+      "children": [
+        {
+          "attrs": {
+            "width": 138.154296875,
+            "height": 35
+          },
+          "className": "Tag"
+        },
+        {
+          "attrs": {
+            "text": "Headline",
+            "fontSize": 35,
+            "fill": "black",
+            "height": "auto"
+          },
+          "className": "Text"
+        }
+      ]
+    },
+    {
+      "attrs": {
+        "x": 40,
+        "y": 40,
+        "radius": 50,
+        "fill": "#ff000d",
+        "width": 100,
+        "height": 100
+      },
+      "filters": [],
+      "className": "Circle",
+      "zIndex": 5
+    },
+    {
+      "attrs": {
+        "x": 40,
+        "y": 40,
+        "width": 50,
+        "height": 50,
+        "fill": "#ff000d"
+      },
+      "filters": [],
+      "className": "Rect",
+      "zIndex": 6
+    },
+    {
+      "attrs": {
+        "x": 40,
+        "y": 40,
+        "width": 36.68,
+        "height": 20
+      },
+      "filters": [],
+      "className": "Label",
+      "zIndex": 0,
+      "children": [
+        {
+          "attrs": {
+            "width": 36.6796875,
+            "height": 20
+          },
+          "className": "Tag"
+        },
+        {
+          "attrs": {
+            "text": "Text",
+            "fontSize": 20,
+            "fill": "black",
+            "height": "auto"
+          },
+          "className": "Text"
+        }
+      ]
+    }
+  ]
+}

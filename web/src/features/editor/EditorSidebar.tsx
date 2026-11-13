@@ -25,6 +25,7 @@ import {
   GripVertical,
   ImageIcon,
   Plus,
+  Presentation,
   Trash2,
   X,
 } from 'lucide-react';
@@ -47,6 +48,7 @@ type Props = {
   onMove: (from: number, to: number) => void;
   onDelete: (key: string) => void;
   onAdd: () => void;
+  onAddSlide: () => void;
 };
 
 const entryClass =
@@ -216,6 +218,7 @@ export function EditorSidebar({
   onMove,
   onDelete,
   onAdd,
+  onAddSlide,
 }: Props) {
   const { t } = useTranslation();
   const sensors = useSensors(
@@ -308,10 +311,23 @@ export function EditorSidebar({
         </SortableContext>
       </DndContext>
 
-      <Button type="button" variant="outline" className="h-11 border-dashed" onClick={onAdd}>
-        <Plus aria-hidden="true" />
-        {t('editor.add_new_question')}
-      </Button>
+      {/* Legacy: "add question" and "slide" side by side under the list. */}
+      <div className="grid grid-cols-[1fr_auto] gap-2">
+        <Button type="button" variant="outline" className="h-11 border-dashed" onClick={onAdd}>
+          <Plus aria-hidden="true" />
+          {t('editor.add_new_question')}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-11 border-dashed"
+          onClick={onAddSlide}
+          aria-label={t('editor.slide.add_slide')}
+        >
+          <Presentation aria-hidden="true" />
+          {t('words.slide')}
+        </Button>
+      </div>
     </nav>
   );
 }

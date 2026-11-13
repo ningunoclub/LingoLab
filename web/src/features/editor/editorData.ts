@@ -35,10 +35,7 @@ export const DEFAULT_RANGE_ANSWER: RangeAnswer = {
 /** Picked when the custom background colour is switched on. */
 export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 
-/**
- * Question types this editor can add and edit so far, in the order of legacy's
- * add-question popup. SLIDE follows with PR 5.
- */
+/** Question types this editor can add and edit, in the order of legacy's add-question popup. */
 export const EDITABLE_TYPES: readonly QuizQuestionType[] = [
   'ABCD',
   'VOTING',
@@ -46,7 +43,13 @@ export const EDITABLE_TYPES: readonly QuizQuestionType[] = [
   'ORDER',
   'TEXT',
   'RANGE',
+  'SLIDE',
 ];
+
+/** The types in the add-question dialog. Slides have their own button, as in legacy's sidebar. */
+export const DIALOG_TYPES: readonly QuizQuestionType[] = EDITABLE_TYPES.filter(
+  (type) => type !== 'SLIDE',
+);
 
 let keyCounter = 0;
 function nextKey(): string {
@@ -81,6 +84,9 @@ export function emptyQuiz(title = ''): EditorData {
 }
 
 export function emptyQuestion(type: QuizQuestionType): Question {
+  // Legacy's `empy_slide` (sidebar.svelte): two minutes and the title "Slide", which the
+  // caller translates.
+  if (type === 'SLIDE') return { type, time: '120', question: '', image: null, answers: '' };
   return {
     type,
     time: '20',

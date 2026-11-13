@@ -5,6 +5,7 @@ import {
   clearDraft,
   DEFAULT_ANSWER_COLORS,
   DEFAULT_RANGE_ANSWER,
+  DIALOG_TYPES,
   DRAFT_STORAGE_KEY,
   EDITABLE_TYPES,
   emptyQuestion,
@@ -250,10 +251,22 @@ describe('fitRange', () => {
 });
 
 describe('new questions', () => {
-  it('can be added for every type but SLIDE', () => {
+  it('can be added for every type; slides have their own button, not the dialog', () => {
     expect([...EDITABLE_TYPES].sort()).toEqual(
-      ['ABCD', 'CHECK', 'ORDER', 'RANGE', 'TEXT', 'VOTING'].sort(),
+      ['ABCD', 'CHECK', 'ORDER', 'RANGE', 'SLIDE', 'TEXT', 'VOTING'].sort(),
     );
+    expect(DIALOG_TYPES).not.toContain('SLIDE');
+    expect(DIALOG_TYPES).toHaveLength(EDITABLE_TYPES.length - 1);
+  });
+
+  it("start a SLIDE with legacy's two minutes and an empty canvas", () => {
+    expect(emptyQuestion('SLIDE')).toEqual({
+      type: 'SLIDE',
+      time: '120',
+      question: '',
+      image: null,
+      answers: '',
+    });
   });
 
   it('start a RANGE question with its own copy of the default range', () => {

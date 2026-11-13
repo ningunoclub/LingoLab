@@ -133,3 +133,38 @@ describe('MediaUploader', () => {
     expect(screen.getByRole('heading', { name: 'Select the Upload Type' })).toBeInTheDocument();
   });
 });
+
+describe('MediaUploader opened from outside', () => {
+  it('has no button of its own and reports open and close', async () => {
+    const onOpenChange = vi.fn();
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { rerender } = render(
+      <QueryClientProvider client={queryClient}>
+        <MediaUploader
+          fieldLabel="Question 2"
+          onSelect={vi.fn()}
+          open={false}
+          onOpenChange={onOpenChange}
+        />
+      </QueryClientProvider>,
+    );
+    expect(screen.queryByRole('button', { name: /Add Media/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    rerender(
+      <QueryClientProvider client={queryClient}>
+        <MediaUploader
+          fieldLabel="Question 2"
+          onSelect={vi.fn()}
+          open
+          onOpenChange={onOpenChange}
+        />
+      </QueryClientProvider>,
+    );
+    expect(
+      screen.getByRole('dialog', { name: 'Select the Upload Type' }),
+    ).toHaveAccessibleDescription('Question 2');
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Close' }));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+});

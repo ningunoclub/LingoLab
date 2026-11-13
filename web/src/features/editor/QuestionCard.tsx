@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 import { AbcdAnswers } from './AbcdAnswers';
 import { EDITABLE_TYPES } from './editorData';
 import type { EditorIssue } from './editorSchema';
@@ -26,6 +27,7 @@ import { OrderAnswers } from './OrderAnswers';
 import { TYPE_NAME_KEYS } from './questionTypes';
 import { RangeAnswerEditor } from './RangeAnswerEditor';
 import { RichTextInput } from './RichTextInput';
+import { SlideEditor } from './slide/SlideEditor';
 import { TextAnswers } from './TextAnswers';
 import type {
   AbcdAnswer,
@@ -64,6 +66,7 @@ function AnswerPart({ question, onChange }: Pick<Props, 'question' | 'onChange'>
     case 'RANGE':
       return <RangeAnswerEditor answer={answers as RangeAnswer} onChange={setAnswers} />;
     case 'SLIDE':
+      // Rendered by `QuestionCard` itself, which places the canvas instead of the answers.
       return null;
   }
 }
@@ -82,11 +85,16 @@ export function QuestionCard({ question, number, issues, onChange }: Props) {
     (issue) => issue.path[0] === 'answers' && issue.path.length === 1,
   );
   const editable = EDITABLE_TYPES.includes(question.type);
+  const slide = question.type === 'SLIDE';
 
   return (
     <section
       aria-labelledby={`${id}-heading`}
-      className="mx-auto flex w-full max-w-3xl flex-col gap-6 rounded-xl border bg-card p-4 sm:p-6"
+      // A slide gets more width: the canvas is the content.
+      className={cn(
+        'mx-auto flex w-full flex-col gap-6 rounded-xl border bg-card p-4 sm:p-6',
+        slide ? 'max-w-5xl' : 'max-w-3xl',
+      )}
     >
       <div className="flex flex-wrap items-center gap-3">
         <h2 id={`${id}-heading`} className="font-display text-xl font-semibold whitespace-nowrap">
@@ -119,7 +127,8 @@ export function QuestionCard({ question, number, issues, onChange }: Props) {
         ) : null}
       </div>
 
-      {question.image ? (
+      {/* Legacy's slide card has no question image; the slide holds its own images. */}
+      {slide ? null : question.image ? (
         <div className="flex flex-col items-start gap-2">
           <MediaComponent src={question.image} className="h-56 w-full rounded-md sm:w-96" />
           <Button type="button" variant="outline" onClick={() => onChange({ image: null })}>
@@ -160,21 +169,39 @@ export function QuestionCard({ question, number, issues, onChange }: Props) {
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-3">
-        <h3 className="font-display text-base font-semibold">{t('words.answer_plural')}</h3>
-        {editable ? (
-          <>
-            <AnswerPart question={question} onChange={onChange} />
-            {answersIssue ? (
-              <p className="text-sm text-destructive">{t(answersIssue.message)}</p>
-            ) : null}
-          </>
-        ) : (
-          <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-            {t('editor.type_not_editable_yet')}
-          </p>
-        )}
-      </div>
+      {slide ? (
+        <div className="flex flex-col gap-3">
+          <h3 className="font-display text-base font-semibold">{t('words.slide')}</h3>
+          <SlideEditor
+            value={typeof question.answers === 'string' ? question.answers : ''}
+            onChange={(answers) => onChange({ answers })}
+            fieldLabel={`${t('words.question')} ${number}`}
+            invalid={answersIssue !== undefined}
+            describedBy={answersIssue ? `${id}-slide-error` : undefined}
+          />
+          {answersIssue ? (
+            <p id={`${id}-slide-error`} className="text-sm text-destructive">
+              {t(answersIssue.message)}
+            </p>
+          ) : null}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          <h3 className="font-display text-base font-semibold">{t('words.answer_plural')}</h3>
+          {editable ? (
+            <>
+              <AnswerPart question={question} onChange={onChange} />
+              {answersIssue ? (
+                <p className="text-sm text-destructive">{t(answersIssue.message)}</p>
+              ) : null}
+            </>
+          ) : (
+            <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+              {t('editor.type_not_editable_yet')}
+            </p>
+          )}
+        </div>
+      )}
 
       <Dialog open={advancedOpen} onOpenChange={setAdvancedOpen}>
         <DialogContent>
