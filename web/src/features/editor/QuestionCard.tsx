@@ -21,6 +21,7 @@ import { Label } from '@/components/ui/label';
 import { AbcdAnswers } from './AbcdAnswers';
 import { EDITABLE_TYPES } from './editorData';
 import type { EditorIssue } from './editorSchema';
+import { MediaUploader } from './media/MediaUploader';
 import { OrderAnswers } from './OrderAnswers';
 import { TYPE_NAME_KEYS } from './questionTypes';
 import { RangeAnswerEditor } from './RangeAnswerEditor';
@@ -127,7 +128,12 @@ export function QuestionCard({ question, number, issues, onChange }: Props) {
             {t('editor.remove_image')}
           </Button>
         </div>
-      ) : null}
+      ) : (
+        <MediaUploader
+          fieldLabel={`${t('words.question')} ${number}`}
+          onSelect={(image) => onChange({ image })}
+        />
+      )}
 
       <div className="flex flex-col gap-2">
         <Label htmlFor={`${id}-time`}>

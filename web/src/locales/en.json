@@ -525,7 +525,17 @@
     "images_by_pixabay": "Images provided by Pixabay",
     "search_english_only": "The search works in English only",
     "next_page": "Next page",
-    "previous_page": "Previous page"
+    "previous_page": "Previous page",
+    "drop_here": "Drop an image here",
+    "choose_file": "or click to choose one (PNG, JPEG, GIF or WebP, up to 10 MB)",
+    "change_file": "Choose another image",
+    "too_large": "This image is too large. The limit is 10 MB.",
+    "unsupported_type": "This file type is not supported. Use PNG, JPEG, GIF or WebP.",
+    "storage_limit": "Your storage is full. Delete some files before you upload new ones.",
+    "upload_failed": "The upload failed. Please try again.",
+    "library_empty": "You have not uploaded any files yet.",
+    "library_error": "Your uploads could not be loaded.",
+    "no_name": "No name available"
   },
   "avatar_settings": {
     "skin_color": "Skin color",

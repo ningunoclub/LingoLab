@@ -537,7 +537,17 @@
     "images_by_pixabay": "Bilder von Pixabay",
     "next_page": "Nächste Seite",
     "previous_page": "Vorherige Seite",
-    "search_english_only": "Die Suche funktioniert nur in Englisch"
+    "search_english_only": "Die Suche funktioniert nur in Englisch",
+    "drop_here": "Bild hierher ziehen",
+    "choose_file": "oder klicken, um eines auszuwählen (PNG, JPEG, GIF oder WebP, bis 10 MB)",
+    "change_file": "Anderes Bild wählen",
+    "too_large": "Dieses Bild ist zu gross. Die Grenze liegt bei 10 MB.",
+    "unsupported_type": "Dieser Dateityp wird nicht unterstützt. Verwende PNG, JPEG, GIF oder WebP.",
+    "storage_limit": "Dein Speicher ist voll. Lösche einige Dateien, bevor du neue hochlädst.",
+    "upload_failed": "Das Hochladen ist fehlgeschlagen. Bitte versuche es noch einmal.",
+    "library_empty": "Du hast noch keine Dateien hochgeladen.",
+    "library_error": "Deine Uploads konnten nicht geladen werden.",
+    "no_name": "Kein Name vorhanden"
   },
   "avatar_settings": {
     "skin_color": "Hautfarbe",
