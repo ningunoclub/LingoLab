@@ -6,6 +6,7 @@ import { ChartColumn, Download, Eye, type LucideIcon, Pencil, Play, Trash2 } fro
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MediaComponent } from '@/components/MediaComponent';
+import { RichText } from '@/components/RichText';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -83,11 +84,15 @@ export function DashboardItemCard({ item, onAnalytics, onStartGame, onDelete, on
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-2">
-          <h2 className="truncate font-display text-lg font-semibold">{item.title}</h2>
+          <h2 className="truncate font-display text-lg font-semibold">
+            <RichText html={item.title} />
+          </h2>
           {isQuiz ? null : <Badge variant="secondary">{t('words.quiztivity')}</Badge>}
         </div>
         {item.description ? (
-          <p className="line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
+          <p className="line-clamp-2 text-sm text-muted-foreground">
+            <RichText html={item.description} />
+          </p>
         ) : null}
       </div>
 

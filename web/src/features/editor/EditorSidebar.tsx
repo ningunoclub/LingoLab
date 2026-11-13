@@ -30,7 +30,9 @@ import {
 } from 'lucide-react';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RichText } from '@/components/RichText';
 import { Button } from '@/components/ui/button';
+import { richTextToPlain } from '@/lib/richText';
 import { cn } from '@/lib/utils';
 import { type EditorIssue, hasIssueAt } from './editorSchema';
 import { TYPE_NAME_KEYS } from './questionTypes';
@@ -142,7 +144,7 @@ function SortableQuestion({
         type="button"
         onClick={onSelect}
         aria-current={selected ? 'true' : undefined}
-        title={question.question}
+        title={richTextToPlain(question.question)}
         className={cn(
           entryClass,
           'flex min-h-11 min-w-0 flex-1 flex-col gap-2 p-3',
@@ -157,7 +159,11 @@ function SortableQuestion({
               question.question === '' && 'font-normal italic text-muted-foreground',
             )}
           >
-            {question.question === '' ? t('editor.no_title') : question.question}
+            {question.question === '' ? (
+              t('editor.no_title')
+            ) : (
+              <RichText html={question.question} />
+            )}
           </span>
           {question.image ? (
             <ImageIcon
@@ -233,7 +239,7 @@ export function EditorSidebar({
         type="button"
         onClick={() => onSelect(null)}
         aria-current={selectedKey === null ? 'true' : undefined}
-        title={state.title}
+        title={richTextToPlain(state.title)}
         className={cn(
           entryClass,
           'flex min-h-11 flex-col gap-1 p-3',
@@ -247,7 +253,7 @@ export function EditorSidebar({
               state.title === '' && 'font-normal italic text-muted-foreground',
             )}
           >
-            {state.title === '' ? t('editor.no_title') : state.title}
+            {state.title === '' ? t('editor.no_title') : <RichText html={state.title} />}
           </span>
           {settingsInvalid ? <InvalidMark /> : null}
         </span>

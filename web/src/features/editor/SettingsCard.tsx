@@ -6,13 +6,13 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MediaComponent } from '@/components/MediaComponent';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { DEFAULT_BACKGROUND_COLOR } from './editorData';
 import type { EditorIssue } from './editorSchema';
 import { MediaUploader } from './media/MediaUploader';
+import { RichTextInput } from './RichTextInput';
 import type { EditorState } from './types';
 
 type Settings = Omit<EditorState, 'questions'>;
@@ -41,14 +41,12 @@ export function SettingsCard({ settings, issues, onChange }: Props) {
       </h2>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor={`${id}-title`}>{t('words.title')}</Label>
-        <Input
-          id={`${id}-title`}
+        <RichTextInput
+          label={t('words.title')}
           value={settings.title}
-          onChange={(event) => onChange({ title: event.target.value })}
-          aria-invalid={titleIssue !== undefined}
-          aria-describedby={titleIssue ? `${id}-title-error` : undefined}
-          className="h-11"
+          onChange={(title) => onChange({ title })}
+          invalid={titleIssue !== undefined}
+          describedBy={titleIssue ? `${id}-title-error` : undefined}
         />
         {titleIssue ? (
           <p id={`${id}-title-error`} className="text-sm text-destructive">
