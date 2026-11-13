@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 import { act, renderHook } from '@testing-library/react';
 import { StrictMode } from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useHostStore } from './hostStore';
 import { useHostGame } from './useHostGame';
 
@@ -78,5 +78,97 @@ describe('useHostGame', () => {
     renderHook(() => useHostGame('123456', 'game-id', true));
     serverSends('already_registered_as_admin');
     expect(useHostStore.getState()).toMatchObject({ status: 'error', error: 'already_registered' });
+  });
+
+  describe('question loop', () => {
+    const LOOP_GAME = JSON.stringify({
+      title: 'Quiz',
+      questions: [
+        { question: 'One', time: '3', type: 'ABCD', answers: [] },
+        { question: 'Two', time: '5', type: 'ABCD', answers: [], hide_results: true },
+      ],
+    });
+    const answer = (username: string, score: number) => ({
+      username,
+      answer: 'x',
+      right: score > 0,
+      time_taken: 1000,
+      score,
+    });
+
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
+
+    function startedGame() {
+      const hook = renderHook(() => useHostGame('123456', 'game-id', true));
+      serverSends('registered_as_admin', { game_id: 'game-id', game: LOOP_GAME });
+      serverSends('start_game');
+      return hook;
+    }
+
+    it('counts down, counts answers and adds the points once', () => {
+      const { result } = startedGame();
+      act(() => result.current.run({ kind: 'next', question: 0 }));
+      expect(fake.socket.emit).toHaveBeenCalledWith('set_question_number', '0');
+
+      serverSends('set_question_number', { question_index: 0 });
+      expect(useHostStore.getState()).toMatchObject({ questionIndex: 0, timeLeft: 3 });
+      act(() => vi.advanceTimersByTime(1000));
+      expect(useHostStore.getState().timeLeft).toBe(2);
+      serverSends('player_answer', {});
+      expect(useHostStore.getState().answerCount).toBe(1);
+      serverSends('everyone_answered', {});
+      expect(useHostStore.getState().timeLeft).toBe(0);
+      act(() => vi.advanceTimersByTime(3000));
+      expect(useHostStore.getState().timeLeft).toBe(0);
+
+      act(() => result.current.run({ kind: 'results' }));
+      expect(fake.socket.emit).toHaveBeenCalledWith('get_question_results', {
+        game_id: 'game-id',
+        question_number: 0,
+      });
+      const results = [answer('Mia', 800), answer('Leo', 0)];
+      serverSends('question_results', results);
+      serverSends('question_results', results);
+      expect(useHostStore.getState().scores).toEqual({ Mia: 800, Leo: 0 });
+      expect(useHostStore.getState().scoresBefore).toEqual({});
+    });
+
+    it('stopping the time emits show_solutions', () => {
+      const { result } = startedGame();
+      serverSends('set_question_number', { question_index: 0 });
+      act(() => result.current.run({ kind: 'solutions' }));
+      expect(fake.socket.emit).toHaveBeenCalledWith('show_solutions', {});
+      expect(useHostStore.getState().timeLeft).toBe(0);
+    });
+
+    it('skips hidden results and moves on after a short pause', () => {
+      const { result } = startedGame();
+      serverSends('set_question_number', { question_index: 1 });
+      act(() => result.current.run({ kind: 'skip_results', after: 'final' }));
+      expect(fake.socket.emit).toHaveBeenCalledWith('get_question_results', {
+        game_id: 'game-id',
+        question_number: 1,
+      });
+      expect(fake.socket.emit).not.toHaveBeenCalledWith('get_final_results', {});
+      act(() => vi.advanceTimersByTime(200));
+      expect(fake.socket.emit).toHaveBeenCalledWith('get_final_results', {});
+    });
+
+    it('ends with the final scores, the export link and the saved state', () => {
+      const { result } = startedGame();
+      serverSends('final_results', { '0': [answer('Mia', 800)], '1': [answer('Mia', 100)] });
+      expect(useHostStore.getState().finalScores).toEqual({ Mia: 900 });
+
+      act(() => result.current.requestExport());
+      expect(fake.socket.emit).toHaveBeenCalledWith('get_export_token');
+      serverSends('export_token', 'tok');
+      expect(useHostStore.getState().exportToken).toBe('tok');
+
+      act(() => result.current.saveResults());
+      expect(fake.socket.emit).toHaveBeenCalledWith('save_quiz');
+      serverSends('results_saved_successfully');
+      expect(useHostStore.getState().resultsSaved).toBe(true);
+    });
   });
 });

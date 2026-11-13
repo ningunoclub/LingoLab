@@ -80,8 +80,11 @@ Work top to bottom. Each phase should be usable end to end before starting the n
     `usePlayerGame.ts`. The two js-cookie cookies (`joined_game`, `kicked`) are written with `document.cookie`. Captcha
     games show a notice; no captcha script is loaded. Plausible event and Sentry dropped. After the first question a
     placeholder shows until PR 9
-  - [ ] **PR 8** host question loop: controls, timer, question/results/voting screens, Enter/Space shortcuts, final
-    results, export, save results
+  - [x] **PR 8** host question loop: controls, timer, question/results/voting screens, Enter/Space shortcuts, final
+    results, export, save results. The next step is decided in one pure function (`features/host/hostLoop.ts`,
+    `nextHostAction`) that both the control button and Enter/Space use. Shared new pieces: `components/CountdownRing`
+    and `components/FinalRanking` (PR 9 adds the player's own score to it). `canvas-confetti` 1.9.4 (ISC) added;
+    no confetti with reduced motion. Legacy's row-reorder animation on the scoreboard is not reproduced
   - [ ] **PR 9** player question loop: answer screens for all types, solutions, per-question results, end screen
 - [ ] **PR 10** `/results` (85) and `/results/[result_id]` (~480 with its child components)
 - [ ] **PR 11** `/view/[quiz_id]` (343 + `lib/view_quiz/*`): rating; reuses the start-game and download dialogs and the SLIDE renderer
@@ -294,6 +297,13 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `admin` | Players are `<span onclick>` (kick by click), not keyboard operable. | Real buttons labelled "Remove <name> from the game". Kicking still needs no confirmation, as in legacy. |
 | `admin` | A kicked player's name stays reserved in Redis (`game_session:<pin>:players:<name>`), so it can't rejoin under that name. | Backend behaviour, unchanged. |
 | `admin` | Reloading the host screen loses the host role: the backend answers `already_registered_as_admin`. | Kept (backend). The leave warning (`beforeunload`) stays on while connected, as in legacy. |
+| `admin` | On `set_question_number` the host counts its own question number up by one instead of reading the `question_index` the server sends. | Uses the server's index. Same result unless an event is missed. |
+| `admin` | On a question with `hide_results`, the last question's button says "Next question" and asks the server for a question that does not exist (error in the backend). | The button says "Get final results": it fetches the hidden results silently, then the final results (same 200 ms pause legacy uses before the next question). |
+| `admin` | Enter/Space and the control button follow two separate copies of the logic. They differ on `hide_results` questions (the keys need two presses and flash an empty screen) and the keys can ask for the final results again after the end. | One function decides for both; the keys do exactly what the button shows. |
+| `admin` | The final ranking adds up only the points of results the host actually showed, so points from `hide_results` questions are missing from it. | The ranking adds up the server's `final_results` (every answered question). Same numbers when no results were hidden. |
+| `admin` | The "No answers!" message is dead code (the server sends `[]`, never nothing), so an empty scoreboard table shows instead. | "No answers!" shows when nobody answered. |
+| `admin` | The backend broadcasts `player_answer` and `everyone_answered` to every connected client, not only the game's room, so two games at the same time mix their answer counts and can stop each other's timers. | Backend, unchanged in this phase. Worth fixing after parity. |
+| `admin` | Unused leftovers: a hidden download link, a confetti canvas that is created but not drawn on, and a 200 ms switch-off of the leave warning when the export token arrives. | Dropped. The download link opens in a new tab, so the host screen never unloads. |
 | `play` | `window.alert` for a wrong PIN, a taken name and a kick. A game that has already started and a browser that was kicked in the last day get no message at all (the kicked one only a console banner). | Inline messages on the join card (`play_page.join.*`, en + de), A2–B1 wording. |
 | `play` | The PIN form's Submit button submits the form natively (no handler), reloading `/play` and losing the PIN; the check only ever ran by itself at six digits. | The check still starts at six digits; the button no longer reloads the page. |
 | `play` | The kick handler keeps the `joined_game` cookie and reloads; the backend does not forget the seat, so the reload rejoins the kicked player straight into the game. | The kick deletes the rejoin cookie, so the player stays out (and the one-day `kicked` block applies as intended). |
