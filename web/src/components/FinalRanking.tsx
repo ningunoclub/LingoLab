@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 // Port of legacy `lib/play/admin/final_results.svelte`: the top five, revealed from fifth
-// place up to the winner, then confetti. The player's own score below it follows with PR 9.
+// place up to the winner, then confetti. On a player's phone their own score and place follow.
 import confetti from 'canvas-confetti';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,10 +23,17 @@ const SIZES = [
   'text-xl lg:text-3xl',
 ];
 
-export function FinalRanking({ scores }: { scores: Record<string, number> }) {
+type Props = {
+  scores: Record<string, number>;
+  /** The player looking at this screen; their own score and place are shown below the list. */
+  username?: string;
+};
+
+export function FinalRanking({ scores, username }: Props) {
   const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
-  const names = ranking(scores).slice(0, PLACES);
+  const everyone = ranking(scores);
+  const names = everyone.slice(0, PLACES);
   const shown = names.length;
 
   useEffect(() => {
@@ -49,27 +56,46 @@ export function FinalRanking({ scores }: { scores: Record<string, number> }) {
     );
   }
 
+  const ownPlace = username === undefined ? -1 : everyone.indexOf(username);
+
   return (
-    <ol
-      className="flex flex-col items-center gap-4"
-      aria-label={t('admin_page.loop.final_ranking')}
-    >
-      {names.map((name, i) => (
-        <li
-          key={name}
-          className={cn(
-            'text-balance break-words text-center font-display font-semibold',
-            SIZES[i],
-            !reducedMotion &&
-              'fade-in slide-in-from-top-48 fill-mode-backwards animate-in duration-700',
-          )}
-          style={
-            reducedMotion ? undefined : { animationDelay: `${shown * STEP_MS - (i + 1) * 1000}ms` }
-          }
-        >
-          {t('play_page.final_result_rank', { place: i + 1, username: name, points: scores[name] })}
-        </li>
-      ))}
-    </ol>
+    <>
+      <ol
+        className="flex flex-col items-center gap-4"
+        aria-label={t('admin_page.loop.final_ranking')}
+      >
+        {names.map((name, i) => (
+          <li
+            key={name}
+            className={cn(
+              'text-balance break-words text-center font-display font-semibold',
+              SIZES[i],
+              !reducedMotion &&
+                'fade-in slide-in-from-top-48 fill-mode-backwards animate-in duration-700',
+            )}
+            style={
+              reducedMotion
+                ? undefined
+                : { animationDelay: `${shown * STEP_MS - (i + 1) * 1000}ms` }
+            }
+          >
+            {t('play_page.final_result_rank', {
+              place: i + 1,
+              username: name,
+              points: scores[name],
+            })}
+          </li>
+        ))}
+      </ol>
+      {ownPlace >= 0 && username !== undefined ? (
+        // Legacy hid this box for a player with 0 points.
+        <div className="mx-auto rounded-xl border-4 border-highlight px-6 py-3 text-center text-xl">
+          <p className="tabular-nums">
+            {t('play_page.your_score', { score: scores[username] ?? 0 })}
+          </p>
+          <p>{t('play_page.your_place', { place: ownPlace + 1 })}</p>
+        </div>
+      ) : null}
+    </>
   );
 }

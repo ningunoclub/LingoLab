@@ -98,7 +98,12 @@ export type ClientToServerEvents = {
   set_question_number: (questionIndex: string) => void;
   /** The backend reads only `question_number`; legacy sends `game_id` along. */
   get_question_results: (data: { game_id?: string; question_number: number }) => void;
-  submit_answer: (data: { question_index: number; answer: string }) => void;
+  /** `complex_answer` carries the arranged list of an ORDER question. */
+  submit_answer: (data: {
+    question_index: number;
+    answer: string;
+    complex_answer?: { answer: string }[];
+  }) => void;
   show_solutions: (data: Record<string, never>) => void;
   get_final_results: (data: Record<string, never>) => void;
 

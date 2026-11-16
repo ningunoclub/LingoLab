@@ -544,6 +544,12 @@
       "username_hint": "At least {{min}} characters",
       "captcha_game": "You can't join this game here. Please ask your teacher to start the game again.",
       "other_pin": "Enter another PIN"
+    },
+    "loop": {
+      "time_up": "Time is up. Look at the board.",
+      "answer_sent": "Your answer is in. Wait for the others.",
+      "enter_answer": "Enter your answer",
+      "your_number": "Your number"
     }
   },
   "editor_page": {
