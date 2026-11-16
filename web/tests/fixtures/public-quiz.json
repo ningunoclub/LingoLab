@@ -1,0 +1,147 @@
+{
+  "id": "1715c5e7-f8aa-48b1-9033-31c8292b4526",
+  "public": true,
+  "title": "Irregular verbs",
+  "description": "Past simple and past participle of the 30 most common irregular verbs.",
+  "created_at": "2026-09-24T07:18:31.602673",
+  "updated_at": "2026-09-24T07:18:31.602673",
+  "user_id": {
+    "username": "devteacher",
+    "id": "9fc47546-4e50-4663-b4ee-816119f361db"
+  },
+  "imported_from_kahoot": null,
+  "cover_image": null,
+  "background_color": null,
+  "background_image": null,
+  "kahoot_id": null,
+  "likes": 12,
+  "dislikes": 2,
+  "plays": 32,
+  "views": 59,
+  "mod_rating": null,
+  "gameresultss": [],
+  "storageitems": [],
+  "ratings": [],
+  "questions": [
+    {
+      "question": "<p>go → <strong>past</strong></p>",
+      "time": "20",
+      "type": "ABCD",
+      "image": null,
+      "hide_results": false,
+      "answers": [
+        {
+          "right": true,
+          "answer": "went",
+          "color": null
+        },
+        {
+          "right": false,
+          "answer": "goed",
+          "color": "#56B4E9"
+        }
+      ]
+    },
+    {
+      "question": "Which are past forms?",
+      "time": "30",
+      "type": "CHECK",
+      "image": null,
+      "hide_results": false,
+      "answers": [
+        {
+          "right": true,
+          "answer": "saw",
+          "color": null
+        },
+        {
+          "right": true,
+          "answer": "took",
+          "color": null
+        },
+        {
+          "right": false,
+          "answer": "eated",
+          "color": null
+        }
+      ]
+    },
+    {
+      "question": "How many irregular verbs do you know?",
+      "time": "15",
+      "type": "RANGE",
+      "image": null,
+      "hide_results": false,
+      "answers": {
+        "min": 0,
+        "max": 100,
+        "min_correct": 20,
+        "max_correct": 40
+      }
+    },
+    {
+      "question": "Put the story in order",
+      "time": "40",
+      "type": "ORDER",
+      "image": null,
+      "hide_results": false,
+      "answers": [
+        {
+          "answer": "woke up",
+          "color": null,
+          "id": 0
+        },
+        {
+          "answer": "had breakfast",
+          "color": null,
+          "id": 1
+        },
+        {
+          "answer": "went to school",
+          "color": null,
+          "id": 2
+        }
+      ]
+    },
+    {
+      "question": "Favourite tense?",
+      "time": "10",
+      "type": "VOTING",
+      "image": null,
+      "hide_results": false,
+      "answers": [
+        {
+          "answer": "Past simple",
+          "image": null,
+          "color": null
+        },
+        {
+          "answer": "Present perfect",
+          "image": null,
+          "color": null
+        }
+      ]
+    },
+    {
+      "question": "Past of 'write'?",
+      "time": "25",
+      "type": "TEXT",
+      "image": null,
+      "hide_results": false,
+      "answers": [
+        {
+          "answer": "wrote",
+          "case_sensitive": false
+        }
+      ]
+    },
+    {
+      "question": "Welcome",
+      "time": "5",
+      "type": "SLIDE",
+      "image": null,
+      "hide_results": false,
+      "answers": "{\"stage\": {\"attrs\": {\"width\": 920, \"height\": 786, \"x\": 0, \"y\": 0}, \"filters\": [], \"className\": \"Stage\"}, \"layer\": {\"attrs\": {\"x\": 0, \"y\": 0, \"width\": 920, \"height\": 786}, \"filters\": [], \"className\": \"Layer\"}, \"background\": {\"image\": {\"attrs\": {\"x\": 0, \"y\": 0}, \"filters\": [], \"className\": \"Image\", \"zIndex\": 0}, \"overlay\": {\"attrs\": {\"x\": 0, \"y\": 0}, \"filters\": [], \"className\": \"Rect\", \"zIndex\": 1}}, \"shapes\": [{\"attrs\": {\"x\": 40, \"y\": 40, \"width\": 138.15, \"height\": 35}, \"filters\": [], \"className\": \"Label\", \"zIndex\": 4, \"children\": [{\"attrs\": {\"width\": 138.154296875, \"height\": 35}, \"className\": \"Tag\"}, {\"attrs\": {\"text\": \"Headline\", \"fontSize\": 35, \"fill\": \"black\", \"height\": \"auto\"}, \"className\": \"Text\"}]}, {\"attrs\": {\"x\": 40, \"y\": 40, \"radius\": 50, \"fill\": \"#ff000d\", \"width\": 100, \"height\": 100}, \"filters\": [], \"className\": \"Circle\", \"zIndex\": 5}, {\"attrs\": {\"x\": 40, \"y\": 40, \"width\": 50, \"height\": 50, \"fill\": \"#ff000d\"}, \"filters\": [], \"className\": \"Rect\", \"zIndex\": 6}, {\"attrs\": {\"x\": 40, \"y\": 40, \"width\": 36.68, \"height\": 20}, \"filters\": [], \"className\": \"Label\", \"zIndex\": 0, \"children\": [{\"attrs\": {\"width\": 36.6796875, \"height\": 20}, \"className\": \"Tag\"}, {\"attrs\": {\"text\": \"Text\", \"fontSize\": 20, \"fill\": \"black\", \"height\": \"auto\"}, \"className\": \"Text\"}]}]}"
+    }
+  ]
+}

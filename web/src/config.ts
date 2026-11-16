@@ -13,6 +13,11 @@ export const config = {
   appName: APP_NAME,
   /** Upstream allows disabling registration; mirrored from legacy lib/config.ts. */
   registrationDisabled: false,
+  /**
+   * Where the "Report" link on `/view` sends its email. Legacy hardcoded the upstream
+   * author's address; each deployment sets its own, and the link is hidden without one.
+   */
+  reportEmail: (import.meta.env.VITE_REPORT_EMAIL as string | undefined) || null,
   /** The styleguide route is mounted in dev only. */
   isDev: import.meta.env.DEV,
   /**

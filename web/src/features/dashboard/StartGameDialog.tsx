@@ -30,6 +30,9 @@ import {
   startGame,
 } from './startGameApi';
 
+/** Opened from the dashboard and from `/view`; only the id and the title are needed. */
+type StartableQuiz = Pick<DashboardItem, 'id' | 'title'>;
+
 const MODES: { value: GameMode; titleKey: string; descriptionKey: string }[] = [
   {
     value: 'kahoot',
@@ -44,7 +47,7 @@ const MODES: { value: GameMode; titleKey: string; descriptionKey: string }[] = [
 ];
 
 /** The form. Mounted only while the dialog is open, so each opening starts fresh. */
-function StartGameForm({ quiz }: { quiz: DashboardItem }) {
+function StartGameForm({ quiz, returnTo }: { quiz: StartableQuiz; returnTo: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const id = useId();
@@ -64,7 +67,7 @@ function StartGameForm({ quiz }: { quiz: DashboardItem }) {
       // Legacy sends the teacher to the login page after *any* failure. Only an expired
       // session is a reason to; everything else is reported here.
       if (error instanceof NotSignedInError) {
-        navigate({ to: '/account/login', search: { returnTo: '/dashboard' } });
+        navigate({ to: '/account/login', search: { returnTo } });
       }
     },
   });
@@ -146,9 +149,12 @@ function StartGameForm({ quiz }: { quiz: DashboardItem }) {
 export function StartGameDialog({
   quiz,
   onClose,
+  returnTo = '/dashboard',
 }: {
-  quiz: DashboardItem | null;
+  quiz: StartableQuiz | null;
   onClose: () => void;
+  /** Where the login page sends the teacher back to when the session has expired. */
+  returnTo?: string;
 }) {
   const { t } = useTranslation();
 
@@ -166,7 +172,7 @@ export function StartGameDialog({
             <RichText html={quiz?.title ?? ''} />
           </DialogDescription>
         </DialogHeader>
-        {quiz ? <StartGameForm quiz={quiz} /> : null}
+        {quiz ? <StartGameForm quiz={quiz} returnTo={returnTo} /> : null}
       </DialogContent>
     </Dialog>
   );
