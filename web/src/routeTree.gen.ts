@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ImportRouteImport } from './routes/import'
 import { Route as PlayRouteImport } from './routes/play'
+import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as AccountLoginRouteImport } from './routes/account/login'
@@ -71,6 +72,11 @@ const ImportRoute = ImportRouteImport.update({
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/import': typeof ImportRoute
   '/play': typeof PlayRoute
+  '/practice': typeof PracticeRoute
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
@@ -217,6 +224,7 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/import': typeof ImportRoute
   '/play': typeof PlayRoute
+  '/practice': typeof PracticeRoute
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
@@ -248,6 +256,7 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/import': typeof ImportRoute
   '/play': typeof PlayRoute
+  '/practice': typeof PracticeRoute
   '/search': typeof SearchRoute
   '/styleguide': typeof StyleguideRoute
   '/account/login': typeof AccountLoginRoute
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/import'
     | '/play'
+    | '/practice'
     | '/search'
     | '/styleguide'
     | '/account/login'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/import'
     | '/play'
+    | '/practice'
     | '/search'
     | '/styleguide'
     | '/account/login'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/import'
     | '/play'
+    | '/practice'
     | '/search'
     | '/styleguide'
     | '/account/login'
@@ -371,6 +383,7 @@ export interface RootRouteChildren {
   ExploreRoute: typeof ExploreRoute
   ImportRoute: typeof ImportRoute
   PlayRoute: typeof PlayRoute
+  PracticeRoute: typeof PracticeRoute
   SearchRoute: typeof SearchRoute
   StyleguideRoute: typeof StyleguideRoute
   AccountLoginRoute: typeof AccountLoginRoute
@@ -443,6 +456,13 @@ declare module '@tanstack/react-router' {
       path: '/play'
       fullPath: '/play'
       preLoaderRoute: typeof PlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -603,6 +623,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExploreRoute: ExploreRoute,
   ImportRoute: ImportRoute,
   PlayRoute: PlayRoute,
+  PracticeRoute: PracticeRoute,
   SearchRoute: SearchRoute,
   StyleguideRoute: StyleguideRoute,
   AccountLoginRoute: AccountLoginRoute,

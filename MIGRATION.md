@@ -94,7 +94,11 @@ Work top to bottom. Each phase should be usable end to end before starting the n
 - [x] **PR 10** `/results` (85) and `/results/[result_id]` (~480 with its child components). Data parsing in
   `features/results/resultsApi.ts`, the sums and counts in `resultStats.ts`. Tabs are the shadcn Tabs (new). Both routes
   now need a sign-in. Phones get cards instead of the list table. CHECK answers show their texts, not the stored indices
-- [ ] **PR 11** `/view/[quiz_id]` (343 + `lib/view_quiz/*`): rating; reuses the start-game and download dialogs and the SLIDE renderer
+- [x] **PR 11** `/view/[quiz_id]` (343 + `lib/view_quiz/*`): rating; reuses the start-game and download dialogs and the SLIDE renderer.
+  Pieces in `features/view/` (`viewApi.ts`, `QuizRating`, `ImportedBadge`, `ModerationPanel`, `QuestionPreview`). The quiz
+  is fetched once per visit (each request counts a view). Questions open and close with the shadcn Collapsible (new).
+  `StartGameDialog` now takes any `{id, title}` and a `returnTo`. `/practice` is registered as a placeholder (Phase 3).
+  The Report link's address comes from `VITE_REPORT_EMAIL` (see Legacy quirks)
 - [ ] **PR 12** `/edit/files` (185) and `/dashboard/files` (49): needs the uploader from PR 3
 
 Order: 1 → 12. PR 6 does not depend on the editor and can be pulled forward. The create → host → play loop is complete after PR 9.
@@ -338,3 +342,9 @@ Behaviour in the old app that looks unintended. Log it here instead of silently 
 | `question_tab_dropdown.svelte` | Right and wrong are ✅/❌ emoji; time taken is always `1.234s` with a dot. | lucide Check/X icons with screen-reader text; the time is formatted for the active language. |
 | `locales` | `result_page.correct_answer_plural` uses the i18next v3 `_plural` suffix, which i18next 26 ignores (it would say "2 correct answer"). | Renamed to `correct_answer_one` / `correct_answer_other`. |
 | `routes/results/+page.svelte` | The player count is the number of entries in `player_scores`, not the stored `player_count`. | Replicated. The backend's `set_note` is never called; notes are only shown (parity). |
+| `routes/view/[quiz_id]` | The Report link mails `report@mawoka.eu`, the upstream author's address, from every deployment. | The address is `VITE_REPORT_EMAIL`; without it the link is hidden. |
+| `routes/view/[quiz_id]` | `GET /quiz/get/public/{id}` does not check `public`: any quiz, private ones too, can be viewed by anyone who knows its id. Every request also adds a view. | **Backend, left as is** (rewrite phase). The page fetches once per visit and never refetches on focus or reconnect, so views are not inflated. Worth fixing in the backend later. |
+| `routes/view/[quiz_id]` | A malformed id comes back from FastAPI as 422, which the loader turned into a 500 page. | Treated as "Quiz not found", like 400/404. |
+| `lib/view_quiz/RatingComponent.svelte` | Like/dislike are offered signed out; the backend answers 401 and nothing happens. "Already rated" is an `alert()`; other errors are silent. Switching from like to dislike only adds a dislike locally, though the backend moved the vote (both counts stay up until a reload). | Thumbs are disabled with a tooltip when signed out, as Start and Download already were. Toasts for "already rated" and failures. A switch made on the page also takes back the earlier vote. |
+| `routes/view/[quiz_id]` | Right and wrong ABCD/CHECK answers differ only by a blue or yellow shadow. Tooltips, the RANGE sentence, the moderation labels and "Setting rating failed" are hardcoded English; moderation errors use `alert()`. | Right answers carry a check mark and screen-reader text. New `view_quiz_page.*` keys (en + de); a toast for moderation errors, and one on success when not returning. |
+| `routes/view/[quiz_id]/ModComponent.svelte` | Ratings are a column of buttons that dim the unpicked ones (not announced to screen readers). The label "NFSW" is a typo. | A labelled radio group; "NSFW". |
